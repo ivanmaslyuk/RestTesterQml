@@ -104,7 +104,20 @@ ScrollView {
                                 }
                             }
 
-                            background: Rectangle { }
+                            background: Rectangle {
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    onPressed: {
+                                        paramCheckBox.indicator.color = "#F0F0F0"
+                                    }
+
+                                    onReleased: {
+                                        paramCheckBox.indicator.color = "#F7F7F7"
+                                        paramCheckBox.checked = !paramCheckBox.checked
+                                    }
+                                }
+                            }
                         }
 
                         Rectangle {
