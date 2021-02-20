@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>components/MainWidget.qml</file>
+        <file>components/ParamsTable.qml</file>
+    </qresource>
+</RCC>
