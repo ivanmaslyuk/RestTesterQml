@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
-//import Qt.labs.qmlmodels 1.0
 import "."
 
 ColumnLayout  {
@@ -10,7 +9,7 @@ ColumnLayout  {
     spacing: 12
 
     property var name: "Create User"
-    property var url: "valuekfdsjlfkjslkdjflsjflsjflskfjdksljfslkfjdslkfjskdlfjskljfslkfjsdfvaluekfdsjlfkjslkdjflsjflsjflskfjdksljfslkfjdslkfjskdlfjskljfslkfjsdf"
+    property var url: "http://example.com/?q=red+cars"
 
     Text {
         text: name
@@ -232,18 +231,7 @@ ColumnLayout  {
     StackLayout {
         currentIndex: tabBar.currentIndex
 
-//        ScrollView {
-//            id: scrollView
-//            clip: true
-
-//            ParamsTable {
-//                id: queryParamsTable
-//                implicitWidth: scrollView.width
-//            }
-//        }
-
-        ParamsTable {
-        }
+        ParamsTable { }
 
         Text {
             text: "2222222222222"

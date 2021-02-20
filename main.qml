@@ -5,9 +5,9 @@ import "components"
 
 Window {
     width: 400
-    height: 600
+    height: 300
     visible: true
-    title: qsTr("REST Tester")
+    title: "REST Tester"
 
     MainWidget {
 
@@ -19,9 +19,5 @@ Window {
         anchors.rightMargin: 16
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 12
-
-//        anchors.left: parent.left
-//        anchors.right: parent.right
-//        anchors.top: parent.top
     }
 }
