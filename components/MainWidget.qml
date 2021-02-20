@@ -231,7 +231,9 @@ ColumnLayout  {
     StackLayout {
         currentIndex: tabBar.currentIndex
 
-        ParamsTable { }
+        ParamsTable {
+            showCheckBox: true
+        }
 
         Text {
             text: "2222222222222"

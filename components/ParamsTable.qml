@@ -5,6 +5,8 @@ import QtQuick.Controls 2.15
 
 ScrollView {
     clip: true
+
+    property bool showCheckBox: true
     property ListModel listModel: ListModel {
         ListElement {
             name: "q"
@@ -59,7 +61,7 @@ ScrollView {
         border.width: 1
         radius: 4
         anchors.fill: parent
-        implicitHeight: rootLayout.implicitHeight + 2
+        implicitHeight: rootLayout.childrenRect.height + 2
 
         RowLayout {
             id: rootLayout
@@ -71,6 +73,7 @@ ScrollView {
             ColumnLayout {
                 id: checkBoxCoulmn
                 spacing: 0
+                visible: showCheckBox
 
                 Repeater {
                     model: listModel
@@ -130,6 +133,7 @@ ScrollView {
             }
 
             Rectangle {
+                visible: showCheckBox
                 implicitWidth: 1
                 Layout.fillHeight: true
                 color: "#EEEEEE"

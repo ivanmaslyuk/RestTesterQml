@@ -5,7 +5,7 @@ import "components"
 
 Window {
     width: 400
-    height: 300
+    height: 600
     visible: true
     title: "REST Tester"
 
