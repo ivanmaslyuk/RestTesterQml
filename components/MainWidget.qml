@@ -142,9 +142,7 @@ ColumnLayout  {
                     leftPadding: 0
                     rightPadding: 0
 
-                    background: Rectangle {
-//                        color: "red"
-                    }
+                    background: Rectangle { }
 
                     Text {
                         text: "Enter URL Here"
@@ -233,6 +231,53 @@ ColumnLayout  {
 
         ParamsTable {
             showCheckBox: true
+            listModel: ListModel {
+                ListElement {
+                    name: "q"
+                    value: "red cars"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "offset"
+                    value: "22"
+                    isChecked: false
+                }
+                ListElement {
+                    name: "count"
+                    value: "3"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "q"
+                    value: "red cars"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "offset"
+                    value: "22"
+                    isChecked: false
+                }
+                ListElement {
+                    name: "count"
+                    value: "3"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "q"
+                    value: "red cars"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "offset"
+                    value: "22"
+                    isChecked: false
+                }
+                ListElement {
+                    name: "count"
+                    value: "3"
+                    isChecked: true
+                }
+            }
         }
 
         Text {
