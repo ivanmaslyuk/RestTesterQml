@@ -184,7 +184,7 @@ ColumnLayout  {
         }
     }
 
-    SwitchTabView {
+    SwitchTabBar {
         id: tabBar
         tabsModel: ["Query", "Body", "Headers"]
     }

@@ -27,7 +27,7 @@ ColumnLayout {
                 font.pixelSize: 16
             }
 
-            SwitchTabView {
+            SwitchTabBar {
                 id: tabBar
                 tabsModel: [qsTr("Body"), qsTr("Headers")]
             }
