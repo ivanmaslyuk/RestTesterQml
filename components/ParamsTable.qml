@@ -1,11 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.15
+import QtQml.Models 2.15
 
 
 Rectangle {
     id: rootRect
     property bool showCheckBox: true
+    property bool readOnly: false
     property ListModel listModel: ListModel {}
 
     function fullTableVisible() {
@@ -29,55 +31,6 @@ Rectangle {
         anchors.fill: parent
 
         ScrollBar.vertical: ScrollBar { }
-
-        property bool showCheckBox: true
-        property ListModel listModel: ListModel {
-            ListElement {
-                name: "q"
-                value: "red cars"
-                isChecked: true
-            }
-            ListElement {
-                name: "offset"
-                value: "22"
-                isChecked: false
-            }
-            ListElement {
-                name: "count"
-                value: "3"
-                isChecked: true
-            }
-            ListElement {
-                name: "q"
-                value: "red cars"
-                isChecked: true
-            }
-            ListElement {
-                name: "offset"
-                value: "22"
-                isChecked: false
-            }
-            ListElement {
-                name: "count"
-                value: "3"
-                isChecked: true
-            }
-            ListElement {
-                name: "q"
-                value: "red cars"
-                isChecked: true
-            }
-            ListElement {
-                name: "offset"
-                value: "22"
-                isChecked: false
-            }
-            ListElement {
-                name: "count"
-                value: "3"
-                isChecked: true
-            }
-        }
 
         Rectangle {
             id: control
@@ -148,7 +101,7 @@ Rectangle {
                             }
 
                             Rectangle {
-                                implicitHeight: (index + 1 == listModel.count) ? 0 : 1
+                                implicitHeight: (index + 1 === listModel.count) ? 0 : 1
                                 implicitWidth: 36
                                 color: "#EEEEEE"
                             }
@@ -204,7 +157,7 @@ Rectangle {
                     Rectangle {
                         id: nameColumn
                         SplitView.minimumWidth: 50
-                        SplitView.preferredWidth: splitView.width / 3
+                        SplitView.preferredWidth: splitView.width / 4
                         color: "transparent"
 
                         ColumnLayout {
@@ -226,6 +179,7 @@ Rectangle {
                                         font.family: "Roboto"
                                         font.pixelSize: 12
                                         text: name
+                                        readOnly: rootRect.readOnly
 
                                         background: Rectangle {
                                             color: "transparent"
@@ -233,7 +187,7 @@ Rectangle {
                                     }
 
                                     Rectangle {
-                                        implicitHeight: (index + 1 == listModel.count) ? 0 : 1
+                                        implicitHeight: (index + 1 === listModel.count) ? 0 : 1
                                         Layout.fillWidth: true
                                         color: "#EEEEEE"
                                     }
@@ -266,6 +220,7 @@ Rectangle {
                                         font.family: "Roboto"
                                         font.pixelSize: 12
                                         text: value
+                                        readOnly: rootRect.readOnly
 
                                         background: Rectangle {
                                             color: "transparent"
@@ -273,7 +228,7 @@ Rectangle {
                                     }
 
                                     Rectangle {
-                                        implicitHeight: (index + 1 == listModel.count) ? 0 : 1
+                                        implicitHeight: (index + 1 === listModel.count) ? 0 : 1
                                         Layout.fillWidth: true
                                         color: "#EEEEEE"
                                     }

@@ -1,23 +1,30 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
+import QtQuick.Controls 2.15
 
 import "components"
 
 Window {
-    width: 400
+    width: 500
     height: 600
     visible: true
     title: "REST Tester"
 
-    MainWidget {
+    SplitView {
+        orientation: Qt.Vertical
+        anchors.fill: parent
 
-        anchors.top: parent.top
-        anchors.topMargin: 12
-        anchors.left: parent.left
-        anchors.leftMargin: 16
-        anchors.right: parent.right
-        anchors.rightMargin: 16
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 12
+        handle: Rectangle {
+            color: "#EEEEEE"
+            implicitHeight: 1
+        }
+
+        RequestInfoView {
+            SplitView.minimumHeight: implicitHeight
+        }
+
+        ResponseView {
+            SplitView.minimumHeight: 20
+        }
     }
 }

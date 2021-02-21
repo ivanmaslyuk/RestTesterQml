@@ -1,7 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>components/MainWidget.qml</file>
+        <file>components/RequestInfoView.qml</file>
         <file>components/ParamsTable.qml</file>
+        <file>components/ResponseView.qml</file>
+        <file>components/SwitchTabView.qml</file>
     </qresource>
 </RCC>

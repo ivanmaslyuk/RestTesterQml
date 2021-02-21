@@ -1,11 +1,15 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QFont>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+
+    QFont font("Roboto");
+    app.setFont(font);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
