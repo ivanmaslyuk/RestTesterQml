@@ -5,7 +5,11 @@ import QtQuick.Controls 2.15
 import "."
 
 ColumnLayout {
-//    implicitHeight: header.implicitHeight + stackLayout.implicitHeight
+    spacing: 0
+
+    required property string bodyText
+    required property ListModel headersModel
+
     Rectangle {
         id: header
         implicitHeight: 40
@@ -16,6 +20,7 @@ ColumnLayout {
             anchors.fill: parent
             anchors.leftMargin: 16
             anchors.rightMargin: 16
+
 
             Text {
                 text: qsTr("Response")
@@ -58,23 +63,13 @@ ColumnLayout {
         id: stackLayout
         currentIndex: tabBar.currentIndex
 
-        Flickable {
-            contentHeight: bodyTextEdit.implicitHeight
-            contentWidth: bodyTextEdit.implicitWidth
+        ScrollView {
+            id: scrollView
             clip: true
-
-            ScrollBar.vertical: ScrollBar {
-                policy: (bodyTextEdit.height > parent.height) ?
-                            ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
-            }
-            ScrollBar.horizontal: ScrollBar {
-                policy: (bodyTextEdit.width > parent.width) ?
-                            ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
-            }
 
             TextEdit {
                 id: bodyTextEdit
-                text: "{\n  \"key\": \":value\",\n  {\n    \"key2\": \"value2 is very long\"\n  }\n}"
+                text: bodyText
                 font.family: "Consolas"
                 font.pixelSize: 12
                 selectByMouse: true
@@ -96,23 +91,7 @@ ColumnLayout {
                 anchors.leftMargin: 16
                 anchors.rightMargin: 16
 
-                listModel: ListModel {
-                    ListElement {
-                        name: "Status"
-                        value: "200"
-                        isChecked: true
-                    }
-                    ListElement {
-                        name: "Content-Length"
-                        value: "22"
-                        isChecked: false
-                    }
-                    ListElement {
-                        name: "Content-Type"
-                        value: "application/json"
-                        isChecked: true
-                    }
-                }
+                listModel: headersModel
             }
         }
     }

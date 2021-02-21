@@ -25,6 +25,25 @@ Window {
 
         ResponseView {
             SplitView.minimumHeight: 20
+
+            bodyText: "{\n  \"key\": \":value\",\n  {\n    \"key2\": \"this value is very long, isn't it?\"\n  }\n}"
+            headersModel: ListModel {
+                ListElement {
+                    name: "Status"
+                    value: "200"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "Content-Length"
+                    value: "22"
+                    isChecked: false
+                }
+                ListElement {
+                    name: "Content-Type"
+                    value: "application/json"
+                    isChecked: true
+                }
+            }
         }
     }
 }
