@@ -7,13 +7,21 @@ import "."
 
 SplitView {
     handle: Rectangle {
-        color: "#EEEEEE"
-        implicitWidth: 1
+        implicitWidth: 2
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            color: "#EEEEEE"
+            width: 1
+        }
     }
 
     SplitView {
+        id: requestPane
         orientation: Qt.Vertical
-        SplitView.minimumWidth: 420
+        SplitView.minimumWidth: 380
 
         handle: Rectangle {
             color: "#EEEEEE"
@@ -21,6 +29,7 @@ SplitView {
         }
 
         RequestInfoView {
+            id: requestInfoView
             SplitView.minimumHeight: implicitHeight
         }
 
@@ -49,6 +58,8 @@ SplitView {
     }
 
     DocumentationView {
+        id: documentationPane
+        visible: requestInfoView.documentationShown
         SplitView.minimumWidth: 200
     }
 }

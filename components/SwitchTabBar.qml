@@ -7,8 +7,6 @@ Rectangle {
     height: tabBar.height + 4
     color: "#EEEEEE"
     radius: 4
-    Layout.leftMargin: 16
-    Layout.rightMargin: 16
 
     required property var tabsModel
     readonly property int currentIndex: tabBar.currentIndex

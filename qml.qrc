@@ -7,5 +7,7 @@
         <file>components/SwitchTabBar.qml</file>
         <file>components/DocumentationView.qml</file>
         <file>components/RequestView.qml</file>
+        <file>components/StyledComboBox.qml</file>
+        <file>components/LinkButton.qml</file>
     </qresource>
 </RCC>

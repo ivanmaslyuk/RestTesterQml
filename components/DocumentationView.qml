@@ -23,13 +23,9 @@ ColumnLayout {
             Layout.fillWidth: true
         }
 
-        Button {
-            padding: 0
-            font.underline: hovered
-            font.pixelSize: 12
+        LinkButton {
             text: isEditing ? qsTr("Done") : qsTr("Edit")
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-            background: Rectangle { }
 
             onClicked: {
                 isEditing = !isEditing

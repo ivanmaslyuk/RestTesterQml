@@ -10,14 +10,30 @@ ColumnLayout  {
 
     property var name: "Create User"
     property var url: "http://example.com/?q=red+cars"
+    property bool documentationShown: false
 
-    Text {
-        text: name
-        font.family: "Roboto"
-        font.pixelSize: 16
+    RowLayout {
         Layout.leftMargin: 16
         Layout.rightMargin: 16
         Layout.topMargin: 12
+        Layout.fillWidth: true
+
+        Text {
+            text: name
+            font.family: "Roboto"
+            font.pixelSize: 16
+        }
+
+        Rectangle { Layout.fillWidth: true }
+
+        LinkButton {
+            text: documentationShown ? qsTr("Hide docs") : qsTr("Docs")
+            Layout.alignment: Qt.AlignVCenter
+
+            onClicked: {
+                documentationShown = !documentationShown
+            }
+        }
     }
 
     RowLayout {
@@ -184,9 +200,25 @@ ColumnLayout  {
         }
     }
 
-    SwitchTabBar {
-        id: tabBar
-        tabsModel: ["Query", "Body", "Headers"]
+    RowLayout {
+        spacing: 0
+        Layout.fillHeight: false
+
+        SwitchTabBar {
+            id: tabBar
+            Layout.leftMargin: 16
+            tabsModel: ["Query", "Body", "Headers"]
+        }
+
+        Rectangle { Layout.fillWidth: true }
+
+        StyledComboBox {
+            id: contentTypeComboBox
+            visible: tabBar.currentIndex == 1
+            Layout.fillHeight: true
+            Layout.rightMargin: 16
+            model: ["No body", "form-data", "x-www-form-urlencoded", "json", "raw"]
+        }
     }
 
     StackLayout {
@@ -247,12 +279,80 @@ ColumnLayout  {
             }
         }
 
-        Text {
-            text: "2222222222222"
+        StackLayout {
+            currentIndex: {
+                const index = contentTypeComboBox.currentIndex
+                if (index === 0)
+                    return 0
+
+                if (index > 0 && index < 3)
+                    return 1
+
+                return 2
+            }
+
+            Rectangle {
+                Text {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.topMargin: 16
+                    horizontalAlignment: Qt.AlignHCenter
+                    font.pixelSize: 14
+                    text: "This request has no body."
+                }
+            }
+
+            ParamsTable {
+                listModel: ListModel {
+                    ListElement {
+                        name: "id"
+                        value: "1"
+                        isChecked: true
+                    }
+                }
+            }
+
+            Flickable {
+                id: flickable
+                anchors.fill: parent
+                boundsBehavior: Flickable.StopAtBounds
+                maximumFlickVelocity: 500
+                clip: true
+
+                TextArea.flickable: TextArea {
+                    text: "TextArea\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n"
+                    wrapMode: TextArea.Wrap
+                    selectByMouse: true
+                    background: Rectangle {
+                        border.color: "#EEEEEE"
+                        border.width: 1
+                        radius: 4
+                    }
+                }
+
+                ScrollBar.vertical: ScrollBar { }
+            }
         }
 
-        Text {
-            text: "33333333333333333"
+        ParamsTable {
+            listModel: ListModel {
+                ListElement {
+                    name: "header1"
+                    value: "value 1"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "header2"
+                    value: "value 2"
+                    isChecked: true
+                }
+                ListElement {
+                    name: "header3"
+                    value: "value 3"
+                    isChecked: false
+                }
+            }
         }
     }
 
