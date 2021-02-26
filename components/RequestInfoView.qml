@@ -9,7 +9,7 @@ ColumnLayout  {
     spacing: 12
 
     property var name: "Create User"
-    property var url: "http://example.com/?q=red+cars"
+    property var url: "http://example.com"
     property bool documentationShown: false
 
     RowLayout {

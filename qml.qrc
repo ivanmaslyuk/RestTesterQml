@@ -9,5 +9,6 @@
         <file>components/RequestView.qml</file>
         <file>components/StyledComboBox.qml</file>
         <file>components/LinkButton.qml</file>
+        <file>components/CustomTreeView.qml</file>
     </qresource>
 </RCC>

@@ -1,6 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QFont>
+#include <QQmlContext>
+#include "app.h"
+#include "Models/treemodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +21,13 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    TreeModel myTreeModel;
+    engine.rootContext()->setContextProperty("myTreeModel", &myTreeModel);
+
+    App appObject;
+    engine.rootContext()->setContextProperty("app", &appObject);
+
     engine.load(url);
 
     return app.exec();

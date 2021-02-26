@@ -18,7 +18,16 @@ Window {
         anchors.right: parent.right
     }
 
-    RequestView {
+    SplitView {
         anchors.fill: parent
+
+        CustomTreeView {
+
+        }
+
+        RequestView {
+
+        }
+
     }
 }
