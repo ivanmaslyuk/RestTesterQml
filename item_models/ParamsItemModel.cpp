@@ -1,0 +1,91 @@
+#include "ParamsItemModel.h"
+
+ParamsItemModel::ParamsItemModel(QList<ParamModel *> *params, QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    m_params = params;
+}
+
+QHash<int, QByteArray> ParamsItemModel::roleNames() const
+{
+    return {
+        { DataRole::IsEnabled, "isEnabled" },
+        { DataRole::Key, "key" },
+        { DataRole::Value, "value" },
+    };
+}
+
+QModelIndex ParamsItemModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+
+    ParamModel *param = m_params->at(row);
+    return createIndex(row, column, param);
+}
+
+QModelIndex ParamsItemModel::parent(const QModelIndex &child) const
+{
+    Q_UNUSED(child)
+    return QModelIndex();
+}
+
+int ParamsItemModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return m_params->length();
+}
+
+int ParamsItemModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return 1;
+}
+
+QVariant ParamsItemModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    ParamModel *param = static_cast<ParamModel *>(index.internalPointer());
+
+    if (role == DataRole::IsEnabled)
+        return QVariant(param->enabled);
+    else if (role == DataRole::Key)
+        return QVariant(param->key);
+    else if (role == DataRole::Value)
+        return QVariant(param->value);
+
+    return QVariant();
+}
+
+bool ParamsItemModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid())
+        return false;
+
+    ParamModel *param = static_cast<ParamModel *>(index.internalPointer());
+
+    if (role == DataRole::IsEnabled) {
+        param->enabled = value.toBool();
+        emit dataChanged(index, index, {DataRole::IsEnabled});
+        return true;
+    } else if (role == DataRole::Key) {
+        param->key = value.toString();
+        emit dataChanged(index, index, {DataRole::Key});
+        return true;
+    } else if (role == DataRole::Value) {
+        param->value = value.toString();
+        emit dataChanged(index, index, {DataRole::Value});
+        return true;
+    }
+
+    return false;
+}
+
+void ParamsItemModel::appendRow()
+{
+    beginInsertRows(QModelIndex(), m_params->length(), m_params->length());
+    m_params->append(new ParamModel("", "", true));
+    endInsertRows();
+}

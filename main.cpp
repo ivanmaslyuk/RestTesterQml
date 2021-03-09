@@ -22,8 +22,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-    TreeModel myTreeModel;
-    engine.rootContext()->setContextProperty("myTreeModel", &myTreeModel);
+    RequestTreeNode *rootNode = new RequestTreeNode;
+    rootNode->setIsFolder(true);
+    rootNode->setFolderName("root folder lol");
 
     App appObject;
     engine.rootContext()->setContextProperty("app", &appObject);

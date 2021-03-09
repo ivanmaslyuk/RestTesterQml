@@ -5,7 +5,6 @@ import QtQuick.Controls 2.15
 ColumnLayout {
     spacing: 0
     property bool isEditing: false
-    property string docString: "# Title goes here\n[Hello World](http://example.com)"
 
     RowLayout {
         Layout.fillWidth: true
@@ -15,7 +14,7 @@ ColumnLayout {
         Layout.bottomMargin: 12
 
         Text {
-            text: qsTr("Documentation")
+            text: qsTr("Документация")
             Layout.alignment: Qt.AlignVCenter
         }
 
@@ -24,10 +23,14 @@ ColumnLayout {
         }
 
         LinkButton {
-            text: isEditing ? qsTr("Done") : qsTr("Edit")
+            text: isEditing ? qsTr("Готово") : qsTr("Изменить")
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             onClicked: {
+                if (isEditing) {
+                    app.activeRequest.documentation = documentationEdit.text
+                }
+
                 isEditing = !isEditing
             }
         }
@@ -36,33 +39,79 @@ ColumnLayout {
     StackLayout {
         currentIndex: isEditing ? 1 : 0
 
-        ScrollView {
-            leftPadding: 16
-            rightPadding: leftPadding
-            bottomPadding: 12
-            clip: true
+        Flickable {
+            boundsBehavior: Flickable.StopAtBounds
 
-            TextEdit {
-                text: docString
-                textFormat: TextEdit.MarkdownText
+            TextArea.flickable: TextArea {
+                leftPadding: 16
+                rightPadding: 16
+                wrapMode: TextArea.Wrap
+                selectByMouse: true
+                placeholderText: qsTr("Нет документации")
                 font.pixelSize: 12
-                selectByMouse: true
                 readOnly: true
+                text: app.activeRequest.documentation
+                textFormat: TextArea.MarkdownText
                 onLinkActivated: Qt.openUrlExternally(link)
+                onLinkHovered: { }
             }
+
+            ScrollBar.vertical: ScrollBar {}
         }
 
-        ScrollView {
-            leftPadding: 16
-            rightPadding: leftPadding
-            bottomPadding: 12
-            clip: true
+        Flickable {
+            boundsBehavior: Flickable.StopAtBounds
 
-            TextEdit {
-                text: docString
-                textFormat: TextEdit.PlainText
+            TextArea.flickable: TextArea {
+                id: documentationEdit
+                leftPadding: 16
+                rightPadding: 16
+                wrapMode: TextArea.Wrap
                 selectByMouse: true
+                placeholderText: qsTr("Опишите запрос здесь")
+                font.pixelSize: 12
+                font.family: "Consolas"
+
+                Connections {
+                    target: app
+                    function onActiveRequestChanged(request) {
+                        documentationEdit.text = request.documentation
+                    }
+                }
             }
+
+            ScrollBar.vertical: ScrollBar {}
         }
+
+//        ScrollView {
+//            leftPadding: 16
+//            rightPadding: leftPadding
+//            bottomPadding: 12
+//            clip: true
+
+//            TextEdit {
+//                text: app.activeRequest.documentation
+//                textFormat: TextEdit.MarkdownText
+//                font.pixelSize: 12
+//                selectByMouse: true
+//                readOnly: true
+//                onLinkActivated: Qt.openUrlExternally(link)
+//            }
+//        }
+
+//        ScrollView {
+//            leftPadding: 16
+//            rightPadding: leftPadding
+//            bottomPadding: 12
+//            clip: true
+
+//            TextEdit {
+//                id: documentationTextEdit
+//                text: app.activeRequest.documentation
+//                textFormat: TextEdit.PlainText
+//                selectByMouse: true
+
+//            }
+//        }
     }
 }

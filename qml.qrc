@@ -10,5 +10,7 @@
         <file>components/StyledComboBox.qml</file>
         <file>components/LinkButton.qml</file>
         <file>components/CustomTreeView.qml</file>
+        <file>components/CustomButton.qml</file>
+        <file>components/AppMenu.qml</file>
     </qresource>
 </RCC>

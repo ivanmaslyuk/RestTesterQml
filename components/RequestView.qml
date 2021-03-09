@@ -6,6 +6,8 @@ import QtQml.Models 2.15
 import "."
 
 SplitView {
+    id: control
+
     handle: Rectangle {
         implicitWidth: 2
 
@@ -22,6 +24,8 @@ SplitView {
         id: requestPane
         orientation: Qt.Vertical
         SplitView.minimumWidth: 380
+        SplitView.fillWidth: true
+        clip: true
 
         handle: Rectangle {
             color: "#EEEEEE"
@@ -34,26 +38,12 @@ SplitView {
         }
 
         ResponseView {
+            id: responseView
             SplitView.minimumHeight: 40
+            SplitView.fillHeight: true
 
             bodyText: "{\n  \"key\": \":value\",\n  {\n    \"key2\": \"this value is very long, isn't it?\"\n  }\n}"
-            headersModel: ListModel {
-                ListElement {
-                    name: "Status"
-                    value: "200"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "Content-Length"
-                    value: "22"
-                    isChecked: false
-                }
-                ListElement {
-                    name: "Content-Type"
-                    value: "application/json"
-                    isChecked: true
-                }
-            }
+            headersModel: app.activeRequest.queryParamsModel
         }
     }
 

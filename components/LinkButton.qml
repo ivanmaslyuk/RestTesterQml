@@ -5,5 +5,19 @@ Button {
     padding: 0
     font.underline: hovered
     font.pixelSize: 12
-    background: Rectangle { }
+    background: Rectangle { color: "transparent" }
+
+    property string color: "black"
+
+    contentItem: Text {
+        text: parent.text
+        font: parent.font
+        color: parent.color
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onPressed: mouse.accepted = false
+    }
 }

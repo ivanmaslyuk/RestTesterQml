@@ -8,7 +8,7 @@ ColumnLayout {
     spacing: 0
 
     required property string bodyText
-    required property ListModel headersModel
+    required property var headersModel
 
     Rectangle {
         id: header
@@ -23,13 +23,13 @@ ColumnLayout {
 
 
             Text {
-                text: qsTr("Response")
+                text: qsTr("Ответ")
                 font.pixelSize: 16
             }
 
             SwitchTabBar {
                 id: tabBar
-                tabsModel: [qsTr("Body"), qsTr("Headers")]
+                tabsModel: [qsTr("Тело"), qsTr("Заголовки"), qsTr("Результаты тестов")]
             }
 
             Item {
@@ -82,7 +82,7 @@ ColumnLayout {
             id: headersTable
 
             ParamsTable {
-                showCheckBox: false
+//                showCheckBox: false
                 readOnly: true
 
                 anchors.fill: parent
@@ -91,7 +91,7 @@ ColumnLayout {
                 anchors.leftMargin: 16
                 anchors.rightMargin: 16
 
-                listModel: headersModel
+                model: headersModel
             }
         }
     }

@@ -1,13 +1,13 @@
 #include "treemodel.h"
 #include <QVariant>
 #include <QDebug>
-#include "Models/requestmodel.h"
+#include <QPair>
 
-TreeModel::TreeModel(QObject *parent)
+TreeModel::TreeModel(RequestTreeNode *rootNode, QObject *parent)
     : QAbstractItemModel(parent)
 {
-    rootItem = new TreeItem("");
-    setupModelData(rootItem);
+    rootItem = new TreeItem(QVariant::fromValue(rootNode));
+    setupModelData(rootNode, rootItem);
 }
 
 TreeModel::~TreeModel()
@@ -20,13 +20,17 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-//    if (role != Qt::DisplayRole)
-//        return QVariant();
-
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
-    RequestModel request = item->data().value<RequestModel>();
+    RequestTreeNode *node = item->data().value<RequestTreeNode*>();
 
-    return QVariant(request.displayName);
+    if (role == 0) {
+        return node->isFolder() ? node->folderName() : node->request()->name();
+    }
+    else if (role == 1) {
+        return node->isFolder() ? QVariant() : node->request()->method();
+    }
+
+    return QVariant();
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
@@ -77,6 +81,14 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
     return success;
 }
 
+QHash<int, QByteArray> TreeModel::roleNames() const
+{
+    return {
+        {Roles::name, "name"},
+        {Roles::method, "method"}
+    };
+}
+
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -122,54 +134,36 @@ int TreeModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-void TreeModel::setupModelData(TreeItem *parent)
+void TreeModel::setupModelData(RequestTreeNode *rootNode, TreeItem *parent)
 {
-    RequestModel topLevelFolder;
-    topLevelFolder.displayName = "Top level folder";
+    Q_UNUSED(parent)
 
-    this->insertRows(0, 1);
-    QModelIndex folder1Index = index(0, 0);
-    this->setData(folder1Index, QVariant::fromValue(topLevelFolder));
+    QList<QPair<QModelIndex, RequestTreeNode *>> nodes;
 
+    // Add root's children to nodes
+    QList<QObject *> rootChildren = rootNode->children();
+    insertRows(0, rootChildren.length());
+    for (int i = 0; i < rootChildren.length(); ++i) {
+        RequestTreeNode *node = static_cast<RequestTreeNode *>(rootChildren[i]);
+        nodes.append({index(i, 0), node});
+    }
 
-    RequestModel folder2;
-    folder2.displayName = "Folder";
+    while (nodes.count() > 0) {
+        QPair<QModelIndex, RequestTreeNode *> item = nodes.takeFirst();
+        QModelIndex modelIndex = item.first;
+        RequestTreeNode *node = item.second;
 
-    this->insertRows(0, 1, folder1Index);
-    QModelIndex folder2Index = index(0, 0, folder1Index);
-    this->setData(folder2Index, QVariant::fromValue(folder2));
+        // Add current item to model
+        setData(modelIndex, QVariant::fromValue(node));
 
-
-    QList<ParamModel> queryParams;
-    queryParams << ParamModel("qenabled", "qvalue1") << ParamModel("qdisabled", "q", false);
-    QList<ParamModel> dataParams;
-    dataParams << ParamModel("denabled", "dvalue1") << ParamModel("ddisabled", "d", false);
-    QList<ParamModel> headers;
-    headers << ParamModel("henabled", "hvalue1") << ParamModel("hdisabled", "h", false);
-    RequestModel request;
-    request.url = "http://postman-echo.com/post?qenabled=qvalue1";
-    request.method = "POST";
-    request.displayName = "Postman Echo";
-    request.queryParams = queryParams;
-    request.dataParams = dataParams;
-    request.headers = headers;
-    request.rawData = "{\"key\": 482938473}";
-    request.contentType = "application/json";
-    request.documentation = "# Echo endpoint by Postman\n[Docs on website](https://docs.postman-echo.com/)";
-
-    this->insertRows(0, 2, folder2Index);
-    QModelIndex requestIndex = index(0, 0, folder2Index);
-    this->setData(requestIndex, QVariant::fromValue(request));
-
-
-    RequestModel request2(request);
-    request2.displayName = "VK";
-    request2.url = "http://vk.com/";
-    request2.method = "GET";
-    request2.documentation = "[ВКонтакте](https://vk.com)";
-
-    QModelIndex request2Index = index(1, 0, folder2Index);
-    this->setData(request2Index, QVariant::fromValue(request2));
+        // Add children of current item next
+        QList<QObject *> nodeChildren = node->children();
+        insertRows(0, nodeChildren.length(), modelIndex);
+        for (int i = 0; i < nodeChildren.length(); ++i) {
+            RequestTreeNode *childNode = static_cast<RequestTreeNode *>(nodeChildren[i]);
+            nodes.append({index(i, 0, modelIndex), childNode});
+        }
+    }
 }
 
 TreeItem *TreeModel::getItem(const QModelIndex &index) const

@@ -8,7 +8,7 @@ Rectangle {
     id: rootRect
     property bool showCheckBox: true
     property bool readOnly: false
-    property ListModel listModel: ListModel {}
+    property var model: null
 
     function fullTableVisible() {
         return rootRect.height >= control.implicitHeight
@@ -25,6 +25,7 @@ Rectangle {
     }
 
     Flickable {
+        id: flickable
         clip: true
         contentHeight: control.implicitHeight
         boundsBehavior: Flickable.StopAtBounds
@@ -38,7 +39,8 @@ Rectangle {
             border.width: 1
             radius: 4
             anchors.fill: parent
-            implicitHeight: rootLayout.childrenRect.height + 2
+            implicitHeight: rootLayout.implicitHeight + rootLayout.anchors.margins * 2
+            clip: true
 
             RowLayout {
                 id: rootLayout
@@ -53,18 +55,18 @@ Rectangle {
                     visible: showCheckBox
 
                     Repeater {
-                        model: listModel
+                        model: rootRect.model
 
                         ColumnLayout {
                             spacing: 0
 
                             CheckDelegate {
                                 id: paramCheckBox
-                                checked: isChecked
                                 implicitWidth: 30
                                 implicitHeight: 30
                                 padding: 0
                                 Layout.alignment: Qt.AlignCenter
+                                enabled: !readOnly
 
                                 indicator: Rectangle {
                                     implicitHeight: 12
@@ -98,10 +100,18 @@ Rectangle {
                                         }
                                     }
                                 }
+
+                                onCheckedChanged: {
+                                    model.isEnabled = checked
+                                }
+
+                                Component.onCompleted: {
+                                    paramCheckBox.checked = model.isEnabled
+                                }
                             }
 
                             Rectangle {
-                                implicitHeight: (index + 1 === listModel.count) ? 0 : 1
+                                implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
                                 implicitWidth: 36
                                 color: "#EEEEEE"
                             }
@@ -132,7 +142,7 @@ Rectangle {
                             anchors.fill: parent
 
                             Repeater {
-                                model: listModel
+                                model: rootRect.model
 
                                 ColumnLayout {
                                     spacing: 0
@@ -146,7 +156,7 @@ Rectangle {
 
                                     Rectangle {
                                         implicitWidth: separator.implicitWidth
-                                        implicitHeight: 1
+                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
                                         color: "#EEEEEE"
                                     }
                                 }
@@ -165,12 +175,13 @@ Rectangle {
                             spacing: 0
 
                             Repeater {
-                                model: listModel
+                                model: rootRect.model
 
                                 ColumnLayout {
                                     spacing: 0
 
                                     TextField {
+                                        id: keyField
                                         implicitHeight: 30
                                         leftPadding: 12
                                         rightPadding: 6
@@ -178,16 +189,30 @@ Rectangle {
                                         Layout.fillWidth: true
                                         font.family: "Roboto"
                                         font.pixelSize: 12
-                                        text: name
                                         readOnly: rootRect.readOnly
+                                        placeholderText: "Key"
 
                                         background: Rectangle {
                                             color: "transparent"
                                         }
+
+                                        onTextChanged: {
+                                            if (index === rootRect.model.rowCount() - 1) {
+                                                rootRect.model.appendRow()
+                                                if (!fullTableVisible())
+                                                    flickable.contentY = rootLayout.implicitHeight - rootRect.height
+                                            }
+
+                                            model.key = text
+                                        }
+
+                                        Component.onCompleted: {
+                                            keyField.text = model.key
+                                        }
                                     }
 
                                     Rectangle {
-                                        implicitHeight: (index + 1 === listModel.count) ? 0 : 1
+                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
                                         Layout.fillWidth: true
                                         color: "#EEEEEE"
                                     }
@@ -207,11 +232,12 @@ Rectangle {
                             spacing: 0
 
                             Repeater {
-                                model: listModel
+                                model: rootRect.model
 
                                 ColumnLayout {
                                     spacing: 0
                                     TextField {
+                                        id: valueField
                                         implicitHeight: 30
                                         leftPadding: 6
                                         rightPadding: 12
@@ -219,16 +245,30 @@ Rectangle {
                                         Layout.fillWidth: true
                                         font.family: "Roboto"
                                         font.pixelSize: 12
-                                        text: value
                                         readOnly: rootRect.readOnly
+                                        placeholderText: "Value"
 
                                         background: Rectangle {
                                             color: "transparent"
                                         }
+
+                                        onTextChanged: {
+                                            if (index === rootRect.model.rowCount() - 1) {
+                                                rootRect.model.appendRow()
+                                                if (!fullTableVisible())
+                                                    flickable.contentY = rootLayout.implicitHeight - rootRect.height
+                                            }
+
+                                            model.value = text
+                                        }
+
+                                        Component.onCompleted: {
+                                            valueField.text = model.value
+                                        }
                                     }
 
                                     Rectangle {
-                                        implicitHeight: (index + 1 === listModel.count) ? 0 : 1
+                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
                                         Layout.fillWidth: true
                                         color: "#EEEEEE"
                                     }

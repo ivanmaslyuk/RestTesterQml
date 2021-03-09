@@ -9,9 +9,11 @@ CONFIG += c++11
 SOURCES += \
         Models/parammodel.cpp \
         Models/requestmodel.cpp \
+        Models/requesttreenode.cpp \
         Models/treeitem.cpp \
         Models/treemodel.cpp \
         app.cpp \
+        item_models/ParamsItemModel.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -33,6 +35,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Models/parammodel.h \
     Models/requestmodel.h \
+    Models/requesttreenode.h \
     Models/treeitem.h \
     Models/treemodel.h \
-    app.h
+    app.h \
+    item_models/ParamsItemModel.h

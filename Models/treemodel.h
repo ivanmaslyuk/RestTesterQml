@@ -4,14 +4,21 @@
 #include <QAbstractItemModel>
 #include <QObject>
 #include "treeitem.h"
+#include "Models/requesttreenode.h"
 
 class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    explicit TreeModel(QObject *parent = nullptr);
+    explicit TreeModel(RequestTreeNode *rootNode, QObject *parent = nullptr);
     ~TreeModel();
+
+    enum Roles {
+        name,
+        method
+    };
+    Q_ENUM(Roles)
 
     QVariant data(const QModelIndex &index, int role) const override;
     QModelIndex index(int row, int column,
@@ -27,9 +34,10 @@ public:
                     const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) override;
+    QHash<int, QByteArray> roleNames() const override;
 
 private:
-    void setupModelData(TreeItem *parent);
+    void setupModelData(RequestTreeNode *rootNode, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
 
     TreeItem *rootItem;

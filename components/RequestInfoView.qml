@@ -8,9 +8,12 @@ ColumnLayout  {
     id: rootLayout
     spacing: 12
 
-    property var name: "Create User"
-    property var url: "http://example.com"
     property bool documentationShown: false
+    property bool paramsVisible: true
+
+    onHeightChanged: {
+        paramsVisible = true
+    }
 
     RowLayout {
         Layout.leftMargin: 16
@@ -19,18 +22,19 @@ ColumnLayout  {
         Layout.fillWidth: true
 
         Text {
-            text: name
-            font.family: "Roboto"
+            id: requestName
+            text: app.activeRequest.edited ?
+                      app.activeRequest.name + " *" : app.activeRequest.name
             font.pixelSize: 16
         }
 
         Rectangle { Layout.fillWidth: true }
 
         LinkButton {
-            text: documentationShown ? qsTr("Hide docs") : qsTr("Docs")
+            text: documentationShown ? qsTr("Скрыть документацию") : qsTr("Документация")
             Layout.alignment: Qt.AlignVCenter
 
-            onClicked: {
+            onPressed: {
                 documentationShown = !documentationShown
             }
         }
@@ -63,84 +67,32 @@ ColumnLayout  {
                 anchors.bottomMargin: 1
                 spacing: 12
 
-                ComboBox {
-                    id: methodComboBox
-                    model: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+                StyledComboBox {
+                    id: methodSelect
                     font.pixelSize: 16
-                    font.family: "Roboto"
-
                     Layout.fillHeight: true
+                    sidePadding: 0
+                    hideBackground: true
+                    textRole: "text"
+                    valueRole: "value"
 
-                    delegate: ItemDelegate {
-                        width: 120
-                        contentItem: Text {
-                            text: modelData
-                            color: "#555555"
-                            font: methodComboBox.font
-                            elide: Text.ElideRight
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                        highlighted: methodComboBox.highlightedIndex === index
+                    model: [
+                        { text: "GET", value: "GET" },
+                        { text: "POST", value: "POST" },
+                        { text: "PUT", value: "PUT" },
+                        { text: "PATCH", value: "PATCH" },
+                        { text: "DELETE", value: "DELETE" },
+                    ]
+
+                    onCurrentValueChanged: {
+                        app.activeRequest.method = methodSelect.currentValue
                     }
 
-                    popup: Popup {
-                        y: methodComboBox.height - 1
-                        width: 120
-                        implicitHeight: contentItem.implicitHeight
-                        padding: 1
-
-                        contentItem: ListView {
-                            boundsBehavior: Flickable.StopAtBounds
-                            clip: true
-                            implicitHeight: contentHeight
-                            model: methodComboBox.popup.visible ? methodComboBox.delegateModel : null
-                            currentIndex: methodComboBox.highlightedIndex
-
-                            ScrollIndicator.vertical: ScrollIndicator { }
+                    Connections {
+                        target: app
+                        function onActiveRequestChanged(request) {
+                            methodSelect.currentIndex = methodSelect.indexOfValue(request.method)
                         }
-
-                        background: Rectangle {
-                            border.color: "#EEEEEE"
-                            radius: 4
-                        }
-                    }
-
-                    contentItem: Text {
-                        text: methodComboBox.currentText
-
-                        verticalAlignment: Text.AlignVCenter
-                        font: methodComboBox.font
-                        color: "#555555"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    indicator: Canvas {
-                        id: canvas
-                        x: parent.contentItem.width
-                        y: methodComboBox.topPadding + (methodComboBox.availableHeight - height) / 2
-                        width: 8
-                        height: 6
-                        contextType: "2d"
-
-                        Connections {
-                            target: methodComboBox
-                            function onPressedChanged() { canvas.requestPaint(); }
-                        }
-
-                        onPaint: {
-                            context.reset();
-                            context.moveTo(0, 0);
-                            context.lineTo(width, 0);
-                            context.lineTo(width / 2, height);
-                            context.closePath();
-                            context.fillStyle = "#555555";
-                            context.fill();
-                        }
-                    }
-
-                    background: Rectangle {
-                        implicitWidth: methodComboBox.contentItem.implicitWidth + methodComboBox.indicator.width + 6
-                        height: 38
                     }
                 }
 
@@ -155,7 +107,8 @@ ColumnLayout  {
 
                 TextField {
                     id: urlField
-                    text: url
+                    placeholderText: "Введите URL здесь"
+                    placeholderTextColor: "#555555"
                     Layout.fillWidth: true
                     font.family: "Roboto"
                     font.pixelSize: 16
@@ -165,21 +118,23 @@ ColumnLayout  {
 
                     background: Rectangle { }
 
-                    Text {
-                        text: "Enter URL Here"
-                        font: parent.font
-                        color: "#555555"
-                        visible: !parent.text
-                        anchors.verticalCenter: parent.verticalCenter
+                    onTextChanged: {
+                        app.activeRequest.url = urlField.text
+                    }
+
+                    Connections {
+                        target: app
+                        function onActiveRequestChanged(request) {
+                            urlField.text = request.url
+                        }
                     }
                 }
 
             }
         }
 
-        Button {
+        CustomButton {
             id: sendButton
-            Layout.preferredWidth: 70
             Layout.fillHeight: true
 
             background: Rectangle {
@@ -190,8 +145,7 @@ ColumnLayout  {
             contentItem: Text {
                 font.pixelSize: 16
                 font.bold: true
-                font.family: "Roboto"
-                text: "SEND"
+                text: "ОТПРАВИТЬ"
                 color: "white"
 
                 horizontalAlignment: Text.AlignHCenter
@@ -201,27 +155,60 @@ ColumnLayout  {
     }
 
     RowLayout {
-        spacing: 0
+        spacing: 12
         Layout.fillHeight: false
 
         SwitchTabBar {
             id: tabBar
             Layout.leftMargin: 16
-            tabsModel: ["Query", "Body", "Headers"]
+            tabsModel: [qsTr("Запрос"), qsTr("Тело"), qsTr("Заголовки"), qsTr("Тесты")]
         }
-
-        Rectangle { Layout.fillWidth: true }
 
         StyledComboBox {
             id: contentTypeComboBox
             visible: tabBar.currentIndex == 1
             Layout.fillHeight: true
+            textRole: "text"
+            valueRole: "value"
+            model: [
+                { text: qsTr("Без тела"), value: "" },
+                { text: "URL-encoded", value: "application/x-www-form-urlencoded" },
+                { text: "Form Data", value: "multipart/form-data" },
+                { text: "JSON", value: "application/json" },
+                { text: "Plain Text", value: "text/plain" },
+                { text: "HTML", value: "text/html" },
+            ]
+
+            onCurrentValueChanged: {
+                app.activeRequest.contentType = contentTypeComboBox.currentValue
+            }
+
+            Connections {
+                target: app
+                function onActiveRequestChanged(request) {
+                    contentTypeComboBox.currentIndex = contentTypeComboBox.indexOfValue(request.contentType)
+                }
+            }
+        }
+
+        Rectangle { Layout.fillWidth: true }
+
+        LinkButton {
+            text: rootLayout.paramsVisible ? "Скрыть" : "Показать"
+            onPressed: {
+                rootLayout.paramsVisible = !rootLayout.paramsVisible
+            }
             Layout.rightMargin: 16
-            model: ["No body", "form-data", "x-www-form-urlencoded", "json", "raw"]
         }
     }
 
+    Rectangle {
+        visible: !rootLayout.paramsVisible
+        Layout.fillHeight: true
+    }
+
     StackLayout {
+        visible: rootLayout.paramsVisible
         currentIndex: tabBar.currentIndex
         Layout.leftMargin: 16
         Layout.rightMargin: 16
@@ -229,63 +216,25 @@ ColumnLayout  {
         Layout.minimumHeight: 60
 
         ParamsTable {
-            showCheckBox: true
-            listModel: ListModel {
-                ListElement {
-                    name: "q"
-                    value: "red cars"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "offset"
-                    value: "22"
-                    isChecked: false
-                }
-                ListElement {
-                    name: "count"
-                    value: "3"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "q"
-                    value: "red cars"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "offset"
-                    value: "22"
-                    isChecked: false
-                }
-                ListElement {
-                    name: "count"
-                    value: "3"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "q"
-                    value: "red cars"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "offset"
-                    value: "22"
-                    isChecked: false
-                }
-                ListElement {
-                    name: "count"
-                    value: "3"
-                    isChecked: true
+            id: queryParamsTable
+
+            Connections {
+                target: app
+                function onActiveRequestChanged(request) {
+                    queryParamsTable.model = request.queryParamsModel
                 }
             }
         }
 
         StackLayout {
+            id: bodyEditArea
+
             currentIndex: {
                 const index = contentTypeComboBox.currentIndex
                 if (index === 0)
                     return 0
 
-                if (index > 0 && index < 3)
+                if (index >= 1 && index <= 2)
                     return 1
 
                 return 2
@@ -293,22 +242,22 @@ ColumnLayout  {
 
             Rectangle {
                 Text {
-                    anchors.top: parent.top
+                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.topMargin: 16
                     horizontalAlignment: Qt.AlignHCenter
                     font.pixelSize: 14
-                    text: "This request has no body."
+                    text: qsTr("У этого запроса нет тела.")
                 }
             }
 
             ParamsTable {
-                listModel: ListModel {
-                    ListElement {
-                        name: "id"
-                        value: "1"
-                        isChecked: true
+                id: bodyParamsTable
+
+                Connections {
+                    target: app
+                    function onActiveRequestChanged(request) {
+                        bodyParamsTable.model = request.dataParamsModel
                     }
                 }
             }
@@ -321,13 +270,23 @@ ColumnLayout  {
                 clip: true
 
                 TextArea.flickable: TextArea {
-                    text: "TextArea\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n...\n"
+                    id: rawDataTextArea
                     wrapMode: TextArea.Wrap
                     selectByMouse: true
+                    placeholderText: qsTr("Начните печатать здесь...")
+                    font.pixelSize: 12
+                    font.family: "Consolas"
                     background: Rectangle {
                         border.color: "#EEEEEE"
                         border.width: 1
                         radius: 4
+                    }
+
+                    Connections {
+                        target: app
+                        function onActiveRequestChanged (request) {
+                            rawDataTextArea.text = request.rawData
+                        }
                     }
                 }
 
@@ -336,21 +295,12 @@ ColumnLayout  {
         }
 
         ParamsTable {
-            listModel: ListModel {
-                ListElement {
-                    name: "header1"
-                    value: "value 1"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "header2"
-                    value: "value 2"
-                    isChecked: true
-                }
-                ListElement {
-                    name: "header3"
-                    value: "value 3"
-                    isChecked: false
+            id: headersTable
+
+            Connections {
+                target: app
+                function onActiveRequestChanged(request) {
+                    headersTable.model = request.headersModel
                 }
             }
         }
