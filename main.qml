@@ -6,8 +6,8 @@ import QtQuick.Layouts 1.12
 import "components"
 
 Window {
-    width: 600
-    height: 600
+    minimumWidth: 600
+    minimumHeight: 600
     visible: true
     title: "REST Tester"
 

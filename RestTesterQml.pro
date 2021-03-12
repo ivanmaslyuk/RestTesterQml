@@ -7,14 +7,16 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        Models/Response.cpp \
         Models/parammodel.cpp \
-        Models/requestmodel.cpp \
+        Models/request.cpp \
         Models/requesttreenode.cpp \
         Models/treeitem.cpp \
         Models/treemodel.cpp \
         app.cpp \
         item_models/ParamsItemModel.cpp \
-        main.cpp
+        main.cpp \
+        utils/HttpClient.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,10 +35,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Models/Response.h \
     Models/parammodel.h \
-    Models/requestmodel.h \
+    Models/request.h \
     Models/requesttreenode.h \
     Models/treeitem.h \
     Models/treemodel.h \
     app.h \
-    item_models/ParamsItemModel.h
+    item_models/ParamsItemModel.h \
+    utils/HttpClient.h

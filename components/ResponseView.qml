@@ -5,10 +5,10 @@ import QtQuick.Controls 2.15
 import "."
 
 ColumnLayout {
+    id: control
     spacing: 0
 
-    required property string bodyText
-    required property var headersModel
+    property var response: null
 
     Rectangle {
         id: header
@@ -38,21 +38,21 @@ ColumnLayout {
 
             Text {
                 id: statusCode
-                text: "200"
+                text: response ? response.status : ""
                 color: "#808080"
                 font.pixelSize: 12
             }
 
             Text {
                 id: requestTime
-                text: "56 ms"
+                text: response ? response.time + " ms" : ""
                 color: "#808080"
                 font.pixelSize: 12
             }
 
             Text {
                 id: responseSize
-                text: "4.1 KB"
+                text: response ? response.size + " B" : ""
                 color: "#808080"
                 font.pixelSize: 12
             }
@@ -69,7 +69,7 @@ ColumnLayout {
 
             TextEdit {
                 id: bodyTextEdit
-                text: bodyText
+                text: response ? response.body : ""
                 font.family: "Consolas"
                 font.pixelSize: 12
                 selectByMouse: true
@@ -79,20 +79,26 @@ ColumnLayout {
         }
 
         Rectangle {
-            id: headersTable
-
             ParamsTable {
-//                showCheckBox: false
+                id: headersTable
                 readOnly: true
+                appendEmptyRow: false
+    //            showCheckBox: false
+                model: response ? response.headersModel : null
 
                 anchors.fill: parent
                 anchors.topMargin: 12
                 anchors.bottomMargin: 12
                 anchors.leftMargin: 16
                 anchors.rightMargin: 16
-
-                model: headersModel
             }
+        }
+    }
+
+    Connections {
+        target: app.httpClient
+        function onResponseUpdated(response) {
+            control.response = response
         }
     }
 }

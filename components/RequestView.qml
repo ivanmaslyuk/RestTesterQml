@@ -41,9 +41,6 @@ SplitView {
             id: responseView
             SplitView.minimumHeight: 40
             SplitView.fillHeight: true
-
-            bodyText: "{\n  \"key\": \":value\",\n  {\n    \"key2\": \"this value is very long, isn't it?\"\n  }\n}"
-            headersModel: app.activeRequest.queryParamsModel
         }
     }
 

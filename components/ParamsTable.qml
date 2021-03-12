@@ -8,10 +8,19 @@ Rectangle {
     id: rootRect
     property bool showCheckBox: true
     property bool readOnly: false
+    property bool appendEmptyRow: true
     property var model: null
 
     function fullTableVisible() {
         return rootRect.height >= control.implicitHeight
+    }
+
+    Connections {
+        target: model
+        function onEmptyRowAppended() {
+            if (!fullTableVisible())
+                flickable.scrollDown()
+        }
     }
 
     Rectangle {
@@ -32,6 +41,10 @@ Rectangle {
         anchors.fill: parent
 
         ScrollBar.vertical: ScrollBar { }
+
+        function scrollDown() {
+            ScrollBar.vertical.position = 1
+        }
 
         Rectangle {
             id: control
@@ -59,6 +72,12 @@ Rectangle {
 
                         ColumnLayout {
                             spacing: 0
+
+                            Rectangle {
+                                implicitHeight: index == 0 ? 0 : 1
+                                implicitWidth: 36
+                                color: "#EEEEEE"
+                            }
 
                             CheckDelegate {
                                 id: paramCheckBox
@@ -109,12 +128,6 @@ Rectangle {
                                     paramCheckBox.checked = model.isEnabled
                                 }
                             }
-
-                            Rectangle {
-                                implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
-                                implicitWidth: 36
-                                color: "#EEEEEE"
-                            }
                         }
                     }
                 }
@@ -148,16 +161,16 @@ Rectangle {
                                     spacing: 0
 
                                     Rectangle {
+                                        implicitWidth: separator.implicitWidth
+                                        implicitHeight: index == 0 ? 0 : 1
+                                        color: "#EEEEEE"
+                                    }
+
+                                    Rectangle {
                                         implicitWidth: 1
                                         implicitHeight: rowHeight
                                         color: "#EEEEEE"
                                         Layout.alignment: Qt.AlignHCenter
-                                    }
-
-                                    Rectangle {
-                                        implicitWidth: separator.implicitWidth
-                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
-                                        color: "#EEEEEE"
                                     }
                                 }
                             }
@@ -180,6 +193,12 @@ Rectangle {
                                 ColumnLayout {
                                     spacing: 0
 
+                                    Rectangle {
+                                        implicitHeight: index == 0 ? 0 : 1
+                                        Layout.fillWidth: true
+                                        color: "#EEEEEE"
+                                    }
+
                                     TextField {
                                         id: keyField
                                         implicitHeight: 30
@@ -197,24 +216,12 @@ Rectangle {
                                         }
 
                                         onTextChanged: {
-                                            if (index === rootRect.model.rowCount() - 1) {
-                                                rootRect.model.appendRow()
-                                                if (!fullTableVisible())
-                                                    flickable.contentY = rootLayout.implicitHeight - rootRect.height
-                                            }
-
                                             model.key = text
                                         }
 
                                         Component.onCompleted: {
                                             keyField.text = model.key
                                         }
-                                    }
-
-                                    Rectangle {
-                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
-                                        Layout.fillWidth: true
-                                        color: "#EEEEEE"
                                     }
                                 }
                             }
@@ -236,6 +243,13 @@ Rectangle {
 
                                 ColumnLayout {
                                     spacing: 0
+
+                                    Rectangle {
+                                        implicitHeight: index == 0 ? 0 : 1
+                                        Layout.fillWidth: true
+                                        color: "#EEEEEE"
+                                    }
+
                                     TextField {
                                         id: valueField
                                         implicitHeight: 30
@@ -253,24 +267,12 @@ Rectangle {
                                         }
 
                                         onTextChanged: {
-                                            if (index === rootRect.model.rowCount() - 1) {
-                                                rootRect.model.appendRow()
-                                                if (!fullTableVisible())
-                                                    flickable.contentY = rootLayout.implicitHeight - rootRect.height
-                                            }
-
                                             model.value = text
                                         }
 
                                         Component.onCompleted: {
                                             valueField.text = model.value
                                         }
-                                    }
-
-                                    Rectangle {
-                                        implicitHeight: (index + 1 === rootRect.model.rowCount()) ? 0 : 1
-                                        Layout.fillWidth: true
-                                        color: "#EEEEEE"
                                     }
                                 }
                             }

@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
+import QtQml 2.15
 
 import "."
 
@@ -10,6 +11,17 @@ ColumnLayout  {
 
     property bool documentationShown: false
     property bool paramsVisible: true
+    property var request: app.activeRequest
+    property bool updatingRequest: true
+
+    Connections {
+        target: app
+        function onActiveRequestChanged(request) {
+            updatingRequest = true
+            rootLayout.request = request
+            updatingRequest = false
+        }
+    }
 
     onHeightChanged: {
         paramsVisible = true
@@ -23,8 +35,7 @@ ColumnLayout  {
 
         Text {
             id: requestName
-            text: app.activeRequest.edited ?
-                      app.activeRequest.name + " *" : app.activeRequest.name
+            text: request.edited ? request.name + " *" : request.name
             font.pixelSize: 16
         }
 
@@ -75,6 +86,7 @@ ColumnLayout  {
                     hideBackground: true
                     textRole: "text"
                     valueRole: "value"
+                    currentIndex: methodSelect.indexOfValue(request.method)
 
                     model: [
                         { text: "GET", value: "GET" },
@@ -84,15 +96,12 @@ ColumnLayout  {
                         { text: "DELETE", value: "DELETE" },
                     ]
 
-                    onCurrentValueChanged: {
-                        app.activeRequest.method = methodSelect.currentValue
-                    }
-
-                    Connections {
-                        target: app
-                        function onActiveRequestChanged(request) {
-                            methodSelect.currentIndex = methodSelect.indexOfValue(request.method)
-                        }
+                    Binding {
+                        target: request
+                        property: "method"
+                        value: methodSelect.currentValue
+                        when: !updatingRequest
+                        restoreMode: Binding.RestoreBinding
                     }
                 }
 
@@ -115,18 +124,16 @@ ColumnLayout  {
                     selectByMouse: true
                     leftPadding: 0
                     rightPadding: 0
+                    text: request.url
 
                     background: Rectangle { }
 
-                    onTextChanged: {
-                        app.activeRequest.url = urlField.text
-                    }
-
-                    Connections {
-                        target: app
-                        function onActiveRequestChanged(request) {
-                            urlField.text = request.url
-                        }
+                    Binding {
+                        target: request
+                        property: "url"
+                        value: urlField.text
+                        when: !updatingRequest
+                        restoreMode: Binding.RestoreBinding
                     }
                 }
 
@@ -138,7 +145,7 @@ ColumnLayout  {
             Layout.fillHeight: true
 
             background: Rectangle {
-                color: "#48B146"
+                color: "#3D5AFE"
                 radius: 4
             }
 
@@ -151,6 +158,8 @@ ColumnLayout  {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
+
+            onPressed: app.httpClient.makeRequest(app.activeRequest)
         }
     }
 
@@ -170,24 +179,21 @@ ColumnLayout  {
             Layout.fillHeight: true
             textRole: "text"
             valueRole: "value"
+            currentIndex: indexOfValue(request.contentType)
             model: [
                 { text: qsTr("Без тела"), value: "" },
                 { text: "URL-encoded", value: "application/x-www-form-urlencoded" },
-                { text: "Form Data", value: "multipart/form-data" },
                 { text: "JSON", value: "application/json" },
                 { text: "Plain Text", value: "text/plain" },
                 { text: "HTML", value: "text/html" },
             ]
 
-            onCurrentValueChanged: {
-                app.activeRequest.contentType = contentTypeComboBox.currentValue
-            }
-
-            Connections {
-                target: app
-                function onActiveRequestChanged(request) {
-                    contentTypeComboBox.currentIndex = contentTypeComboBox.indexOfValue(request.contentType)
-                }
+            Binding {
+                target: request
+                property: "contentType"
+                value: contentTypeComboBox.currentValue
+                when: !updatingRequest
+                restoreMode: Binding.RestoreBinding
             }
         }
 
@@ -217,13 +223,7 @@ ColumnLayout  {
 
         ParamsTable {
             id: queryParamsTable
-
-            Connections {
-                target: app
-                function onActiveRequestChanged(request) {
-                    queryParamsTable.model = request.queryParamsModel
-                }
-            }
+            model: request.queryParamsModel
         }
 
         StackLayout {
@@ -234,7 +234,7 @@ ColumnLayout  {
                 if (index === 0)
                     return 0
 
-                if (index >= 1 && index <= 2)
+                if (index === 1)
                     return 1
 
                 return 2
@@ -247,19 +247,13 @@ ColumnLayout  {
                     anchors.right: parent.right
                     horizontalAlignment: Qt.AlignHCenter
                     font.pixelSize: 14
-                    text: qsTr("У этого запроса нет тела.")
+                    text: qsTr("У этого запроса нет тела")
                 }
             }
 
             ParamsTable {
                 id: bodyParamsTable
-
-                Connections {
-                    target: app
-                    function onActiveRequestChanged(request) {
-                        bodyParamsTable.model = request.dataParamsModel
-                    }
-                }
+                model: request.dataParamsModel
             }
 
             Flickable {
@@ -274,6 +268,7 @@ ColumnLayout  {
                     wrapMode: TextArea.Wrap
                     selectByMouse: true
                     placeholderText: qsTr("Начните печатать здесь...")
+                    text: request.rawData
                     font.pixelSize: 12
                     font.family: "Consolas"
                     background: Rectangle {
@@ -282,11 +277,12 @@ ColumnLayout  {
                         radius: 4
                     }
 
-                    Connections {
-                        target: app
-                        function onActiveRequestChanged (request) {
-                            rawDataTextArea.text = request.rawData
-                        }
+                    Binding {
+                        target: request
+                        property: "rawData"
+                        value: rawDataTextArea.text
+                        when: !updatingRequest
+                        restoreMode: Binding.RestoreBinding
                     }
                 }
 
@@ -296,13 +292,7 @@ ColumnLayout  {
 
         ParamsTable {
             id: headersTable
-
-            Connections {
-                target: app
-                function onActiveRequestChanged(request) {
-                    headersTable.model = request.headersModel
-                }
-            }
+            model: request.headersModel
         }
     }
 

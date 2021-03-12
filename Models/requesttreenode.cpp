@@ -5,12 +5,12 @@ RequestTreeNode::RequestTreeNode(QObject *parent) : QObject(parent)
     m_isFolder = false;
 }
 
-RequestModel *RequestTreeNode::request() const
+Request *RequestTreeNode::request() const
 {
     return m_request;
 }
 
-void RequestTreeNode::setRequest(RequestModel *request)
+void RequestTreeNode::setRequest(Request *request)
 {
     m_request = request;
     emit requestChanged(request);

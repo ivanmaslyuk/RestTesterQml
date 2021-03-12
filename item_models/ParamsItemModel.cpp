@@ -1,9 +1,11 @@
 #include "ParamsItemModel.h"
+#include <QDebug>
 
 ParamsItemModel::ParamsItemModel(QList<ParamModel *> *params, QObject *parent)
     : QAbstractItemModel(parent)
 {
     m_params = params;
+    m_params->append(new ParamModel("", ""));
 }
 
 QHash<int, QByteArray> ParamsItemModel::roleNames() const
@@ -17,8 +19,9 @@ QHash<int, QByteArray> ParamsItemModel::roleNames() const
 
 QModelIndex ParamsItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!hasIndex(row, column, parent))
+    if (!hasIndex(row, column, parent)) {
         return QModelIndex();
+    }
 
     ParamModel *param = m_params->at(row);
     return createIndex(row, column, param);
@@ -64,6 +67,12 @@ bool ParamsItemModel::setData(const QModelIndex &index, const QVariant &value, i
     if (!index.isValid())
         return false;
 
+    if (data(index, role) == value)
+        return true; // Prevent binding loop
+
+    if (index.row() == rowCount() - 1 && role != DataRole::IsEnabled)
+        appendEmptyRow();
+
     ParamModel *param = static_cast<ParamModel *>(index.internalPointer());
 
     if (role == DataRole::IsEnabled) {
@@ -83,9 +92,21 @@ bool ParamsItemModel::setData(const QModelIndex &index, const QVariant &value, i
     return false;
 }
 
-void ParamsItemModel::appendRow()
+void ParamsItemModel::replaceData(QList<ParamModel *> newParams)
 {
-    beginInsertRows(QModelIndex(), m_params->length(), m_params->length());
+    beginResetModel();
+    m_params->clear();
+    m_params->append(newParams);
+    m_params->append(new ParamModel("", ""));
+    endResetModel();
+}
+
+void ParamsItemModel::appendEmptyRow()
+{
+    int position = m_params->length();
+    beginInsertRows(QModelIndex(), position, position);
     m_params->append(new ParamModel("", "", true));
     endInsertRows();
+
+    emit emptyRowAppended();
 }

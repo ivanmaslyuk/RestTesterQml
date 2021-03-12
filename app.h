@@ -2,31 +2,34 @@
 #define APP_H
 
 #include <QObject>
-#include "Models/requestmodel.h"
+#include "Models/request.h"
 #include "Models/requesttreenode.h"
 #include "Models/treemodel.h"
+#include "utils/HttpClient.h"
 
 class App : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(RequestModel* activeRequest READ activeRequest WRITE setActiveRequest NOTIFY activeRequestChanged)
+    Q_PROPERTY(Request* activeRequest READ activeRequest WRITE setActiveRequest NOTIFY activeRequestChanged)
     Q_PROPERTY(TreeModel* requestTreeModel READ requestTreeModel NOTIFY requestTreeModelChanged)
+    Q_PROPERTY(HttpClient *httpClient READ httpClient CONSTANT)
 
 public:
     explicit App(QObject *parent = nullptr);
 
-    RequestModel *activeRequest() const;
-    void setActiveRequest(RequestModel *request);
-
+    Request *activeRequest() const;
+    void setActiveRequest(Request *request);
+    HttpClient *httpClient() const;
     TreeModel *requestTreeModel() const;
 
 private:
     TreeModel *m_requestTreeModel;
-    RequestModel *m_activeRequest;
+    Request *m_activeRequest;
     RequestTreeNode *m_rootRequestTreeNode;
+    HttpClient *m_httpClient;
 
 signals:
-    void activeRequestChanged(RequestModel *request);
+    void activeRequestChanged(Request *request);
     void requestTreeModelChanged(TreeModel *treeModel);
 
 public slots:
