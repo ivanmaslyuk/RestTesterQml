@@ -1,6 +1,5 @@
 #include "request.h"
 #include <QUrl>
-#include <QDebug>
 
 Request::Request(QString url, QList<ParamModel *> queryParams,
                            QList<ParamModel *> dataParams, QList<ParamModel *> headers,
@@ -107,13 +106,11 @@ void Request::setUrl(QString url)
 {
     if (url == m_url) return;
     m_url = url;
-    qDebug() << "New url:" << url;
 
     // Update m_queryParams
     QStringList urlParts = url.split("?");
-    if (urlParts.length() == 1) {
+    if (urlParts.length() == 1)
         urlParts.append("");
-    }
 
     QList<ParamModel *> disabledParams;
     for (ParamModel *param : m_queryParams)
@@ -133,7 +130,6 @@ void Request::setQueryParams(QList<ParamModel *> queryParams)
     m_queryParams = queryParams;
 
     setEdited(true);
-//    emit queryParamsChanged(queryParams);
 }
 
 void Request::setDataParams(QList<ParamModel *> dataParams)
@@ -141,7 +137,6 @@ void Request::setDataParams(QList<ParamModel *> dataParams)
     if (dataParams == m_dataParams) return;
     m_dataParams = dataParams;
     setEdited(true);
-//    emit dataParamsChanged(dataParams);
 }
 
 void Request::setHeaders(QList<ParamModel *> headers)
@@ -149,7 +144,6 @@ void Request::setHeaders(QList<ParamModel *> headers)
     if (headers == m_headers) return;
     m_headers = headers;
     setEdited(true);
-//    emit headersChanged(headers);
 }
 
 void Request::setRawData(QString rawData)
@@ -163,7 +157,6 @@ void Request::setRawData(QString rawData)
 void Request::setMethod(QString method)
 {
     if (method == m_method) return;
-    qDebug() << m_name << "New method:" << method;
     m_method = method;
     setEdited(true);
     emit methodChanged(method);
