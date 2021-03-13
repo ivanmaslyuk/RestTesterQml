@@ -6,10 +6,11 @@ import QtQuick.Layouts 1.12
 import "components"
 
 Window {
-    minimumWidth: 600
-    minimumHeight: 600
+    width: 600
+    height: 600
     visible: true
     title: "REST Tester"
+//    color: "black"
 
     Rectangle {
         height: 1

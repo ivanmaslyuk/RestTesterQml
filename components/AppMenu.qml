@@ -6,6 +6,7 @@ Rectangle {
     implicitHeight: rootLayout.implicitHeight + rootLayout.anchors.topMargin
     implicitWidth: rootLayout.implicitWidth
                    + rootLayout.anchors.leftMargin + rootLayout.anchors.rightMargin
+    color: "transparent"
 
     ColumnLayout {
         id: rootLayout

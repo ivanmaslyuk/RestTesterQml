@@ -10,12 +10,13 @@ TreeView {
 
     property int itemHeight: 24
 
-    // private
-    property var clickedIndex: null
-
     TableViewColumn {
         title: "Name"
         role: "name"
+    }
+
+    CreateRequestDialog {
+        id: createDialog
     }
 
     itemDelegate: Rectangle {
@@ -39,6 +40,28 @@ TreeView {
                 color: (control.activeFocus && styleData.selected) ? "white" : "black"
                 Layout.fillWidth: true
             }
+
+
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.RightButton
+            onClicked: contextMenu.popup()
+
+            Menu {
+                id: contextMenu
+                MenuItem { text: qsTr("Переименовать") }
+                MenuItem {
+                    text: qsTr("Создать запрос")
+                    onTriggered: createDialog.show(styleData.index)
+                }
+                MenuItem {
+                    text: qsTr("Удалить")
+                    onTriggered: console.log(styleData.index, 'delete')
+                }
+            }
         }
     }
 
@@ -56,26 +79,6 @@ TreeView {
         id: rowDelegate
         color: getColor()
         height: itemHeight
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.RightButton
-
-            onClicked: {
-                console.log(selection)
-                contextMenu.popup()
-                console.log(selection)
-            }
-
-            Menu {
-                id: contextMenu
-                MenuItem { text: qsTr("Переименовать") }
-                MenuItem { text: qsTr("Создать запрос") }
-                MenuItem { text: qsTr("Создать папку") }
-                MenuItem { text: qsTr("Удалить") }
-            }
-        }
     }
 
     onActivated: {

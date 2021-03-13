@@ -6,6 +6,7 @@ import QtQml.Models 2.15
 
 Rectangle {
     id: rootRect
+    color: "transparent"
     property bool showCheckBox: true
     property bool readOnly: false
     property bool appendEmptyRow: true
@@ -48,6 +49,7 @@ Rectangle {
 
         Rectangle {
             id: control
+            color: "transparent"
             border.color: fullTableVisible() ? "#EEEEEE" : "transparent"
             border.width: 1
             radius: 4
@@ -106,6 +108,8 @@ Rectangle {
                                 }
 
                                 background: Rectangle {
+                                    color: "transparent"
+
                                     MouseArea {
                                         anchors.fill: parent
 
@@ -147,6 +151,7 @@ Rectangle {
                     handle: Rectangle {
                         id: separator
                         implicitWidth: 13
+                        color: "transparent"
 
                         property int rowHeight: 30
 

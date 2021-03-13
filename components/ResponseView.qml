@@ -14,6 +14,7 @@ ColumnLayout {
         id: header
         implicitHeight: 40
         Layout.fillWidth: true
+        color: "transparent"
 
         RowLayout {
             spacing: 12

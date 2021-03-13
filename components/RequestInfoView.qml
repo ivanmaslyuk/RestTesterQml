@@ -66,6 +66,7 @@ ColumnLayout  {
             radius: 4
             Layout.fillWidth: true
             Layout.fillHeight: true
+            color: "transparent"
 
             RowLayout {
                 anchors.top: parent.top
@@ -126,7 +127,7 @@ ColumnLayout  {
                     rightPadding: 0
                     text: request.url
 
-                    background: Rectangle { }
+                    background: Rectangle { color: "transparent" }
 
                     Binding {
                         target: request
@@ -134,6 +135,7 @@ ColumnLayout  {
                         value: urlField.text
                         when: !updatingRequest
                         restoreMode: Binding.RestoreBinding
+
                     }
                 }
 
@@ -143,22 +145,7 @@ ColumnLayout  {
         CustomButton {
             id: sendButton
             Layout.fillHeight: true
-
-            background: Rectangle {
-                color: "#3D5AFE"
-                radius: 4
-            }
-
-            contentItem: Text {
-                font.pixelSize: 16
-                font.bold: true
-                text: "ОТПРАВИТЬ"
-                color: "white"
-
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-
+            text: "ОТПРАВИТЬ"
             onPressed: app.httpClient.makeRequest(app.activeRequest)
         }
     }
