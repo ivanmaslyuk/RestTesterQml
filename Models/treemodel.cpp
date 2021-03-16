@@ -141,12 +141,10 @@ void TreeModel::setupModelData(RequestTreeNode *rootNode, TreeItem *parent)
     QList<QPair<QModelIndex, RequestTreeNode *>> nodes;
 
     // Add root's children to nodes
-    QList<QObject *> rootChildren = rootNode->children();
+    QList<RequestTreeNode *> rootChildren = rootNode->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
     insertRows(0, rootChildren.length());
-    for (int i = 0; i < rootChildren.length(); ++i) {
-        RequestTreeNode *node = static_cast<RequestTreeNode *>(rootChildren[i]);
-        nodes.append({index(i, 0), node});
-    }
+    for (int i = 0; i < rootChildren.length(); ++i)
+        nodes.append({index(i, 0), rootChildren[i]});
 
     while (nodes.count() > 0) {
         QPair<QModelIndex, RequestTreeNode *> item = nodes.takeFirst();
@@ -157,12 +155,10 @@ void TreeModel::setupModelData(RequestTreeNode *rootNode, TreeItem *parent)
         setData(modelIndex, QVariant::fromValue(node));
 
         // Add children of current item next
-        QList<QObject *> nodeChildren = node->children();
+        QList<RequestTreeNode *> nodeChildren = node->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
         insertRows(0, nodeChildren.length(), modelIndex);
-        for (int i = 0; i < nodeChildren.length(); ++i) {
-            RequestTreeNode *childNode = static_cast<RequestTreeNode *>(nodeChildren[i]);
-            nodes.append({index(i, 0, modelIndex), childNode});
-        }
+        for (int i = 0; i < nodeChildren.length(); ++i)
+            nodes.append({index(i, 0, modelIndex), nodeChildren[i]});
     }
 }
 

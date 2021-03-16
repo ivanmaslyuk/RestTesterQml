@@ -7,6 +7,8 @@ struct ParamModel
 {
     ParamModel(QString key, QString value, bool enabled = true);
 
+    bool isEmpty() const;
+
     bool enabled;
     QString key;
     QString value;

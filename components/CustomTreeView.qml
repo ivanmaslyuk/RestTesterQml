@@ -15,9 +15,8 @@ TreeView {
         role: "name"
     }
 
-    CreateRequestDialog {
-        id: createDialog
-    }
+    CreateRequestDialog { id: createDialog }
+    CreateFolderDialog { id: createFolderDialog }
 
     itemDelegate: Rectangle {
         color: "transparent"
@@ -52,7 +51,13 @@ TreeView {
 
             Menu {
                 id: contextMenu
-                MenuItem { text: qsTr("Переименовать") }
+                MenuItem {
+                    text: qsTr("Переименовать")
+                }
+                MenuItem {
+                    text: qsTr("Создать папку")
+                    onTriggered: createFolderDialog.show(styleData.index)
+                }
                 MenuItem {
                     text: qsTr("Создать запрос")
                     onTriggered: createDialog.show(styleData.index)

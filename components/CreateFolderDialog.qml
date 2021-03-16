@@ -7,14 +7,13 @@ import QtQuick.Layouts 1.12
 Dialog {
     width: 400
     height: contentItem.implicitHeight
-    title: qsTr("Новый запрос")
+    title: qsTr("Новая папка")
 
     property var _parentIndex: null
 
     function show(parentIndex) {
         _parentIndex = parentIndex
         nameField.text = ""
-        methodSelect.currentIndex = 0
         open()
     }
 
@@ -23,7 +22,7 @@ Dialog {
         anchors.fill: parent
 
         Text {
-            text: qsTr("Новый запрос")
+            text: qsTr("Новая папка")
             font.pixelSize: 16
             Layout.topMargin: 12
             Layout.leftMargin: 16
@@ -45,25 +44,6 @@ Dialog {
             }
         }
 
-        StyledComboBox {
-            id: methodSelect
-            implicitHeight: 40
-            font.pixelSize: 16
-            textRole: "text"
-            valueRole: "value"
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-            Layout.fillWidth: true
-
-            model: [
-                { text: "GET", value: "GET" },
-                { text: "POST", value: "POST" },
-                { text: "PUT", value: "PUT" },
-                { text: "PATCH", value: "PATCH" },
-                { text: "DELETE", value: "DELETE" },
-            ]
-        }
-
         Rectangle { Layout.fillHeight: true }
 
         RowLayout {
@@ -83,7 +63,7 @@ Dialog {
             CustomButton {
                 text: "СОЗДАТЬ"
                 onClicked: {
-                    app.createRequest(nameField.text, methodSelect.currentValue, _parentIndex)
+                    app.createFolder(nameField.text, _parentIndex)
                     close()
                 }
             }

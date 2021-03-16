@@ -1,31 +1,19 @@
 #include "request.h"
 #include <QUrl>
 
-Request::Request(QString url, QList<ParamModel *> queryParams,
-                           QList<ParamModel *> dataParams, QList<ParamModel *> headers,
-                           QString rawData, QString method, QString name, QString contentType,
-                           QString documentation, QObject *parent) : QObject(parent)
+Request::Request(QObject *parent) : QObject(parent)
 {
-    m_edited = false;
-    m_url = url;
-    m_queryParams = queryParams;
-    m_dataParams = dataParams;
-    m_headers = headers;
-    m_rawData = rawData;
-    m_method = method;
-    m_name = name;
-    m_contentType = contentType;
-    m_documentation = documentation;
     m_queryParamsModel = new ParamsItemModel(&m_queryParams, this);
     m_dataParamsModel = new ParamsItemModel(&m_dataParams, this);
     m_headersModel = new ParamsItemModel(&m_headers, this);
 
     connect(m_queryParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleQueryParamsChanged);
+    m_localId = -1;
 }
 
-Request *Request::empty(QObject *parent)
+Request::Request(int localId, QObject *parent) : Request(parent)
 {
-    return new Request("", {}, {}, {}, "", "", "", "", "", parent);
+    m_localId = localId;
 }
 
 QByteArray Request::data()
@@ -35,6 +23,16 @@ QByteArray Request::data()
     }
 
     return m_rawData.toUtf8();
+}
+
+int Request::localId() const
+{
+    return m_localId;
+}
+
+void Request::setLocalId(int id)
+{
+    m_localId = id;
 }
 
 bool Request::edited() const
@@ -128,7 +126,7 @@ void Request::setQueryParams(QList<ParamModel *> queryParams)
 {
     if (queryParams == m_queryParams) return;
     m_queryParams = queryParams;
-
+    m_queryParamsModel->replaceData(queryParams);
     setEdited(true);
 }
 
@@ -136,6 +134,7 @@ void Request::setDataParams(QList<ParamModel *> dataParams)
 {
     if (dataParams == m_dataParams) return;
     m_dataParams = dataParams;
+    m_dataParamsModel->replaceData(dataParams);
     setEdited(true);
 }
 
@@ -143,6 +142,7 @@ void Request::setHeaders(QList<ParamModel *> headers)
 {
     if (headers == m_headers) return;
     m_headers = headers;
+    m_headersModel->replaceData(headers);
     setEdited(true);
 }
 

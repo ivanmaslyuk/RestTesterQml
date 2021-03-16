@@ -12,11 +12,17 @@ class RequestTreeNode : public QObject
 
 public:
     explicit RequestTreeNode(QObject *parent = nullptr);
+    explicit RequestTreeNode(int localId, QObject *parent = nullptr);
+
+    int localId() const;
+    void setLocalId(int id);
 
     Request *request() const;
     void setRequest(Request *request);
+
     QString folderName() const;
     void setFolderName(QString name);
+
     bool isFolder() const;
     void setIsFolder(bool isFolder);
 
@@ -25,6 +31,7 @@ signals:
     void folderNameChanged(QString folderName);
 
 private:
+    int m_localId;
     bool m_isFolder;
     Request *m_request;
     QString m_folderName;

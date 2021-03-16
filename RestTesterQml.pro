@@ -1,4 +1,4 @@
-QT += quick
+QT += quick sql
 
 CONFIG += c++11
 
@@ -14,6 +14,8 @@ SOURCES += \
         Models/treeitem.cpp \
         Models/treemodel.cpp \
         app.cpp \
+        db/JsonStorage.cpp \
+        db/SQLiteStorage.cpp \
         item_models/ParamsItemModel.cpp \
         main.cpp \
         utils/HttpClient.cpp
@@ -42,5 +44,7 @@ HEADERS += \
     Models/treeitem.h \
     Models/treemodel.h \
     app.h \
+    db/JsonStorage.h \
+    db/SQLiteStorage.h \
     item_models/ParamsItemModel.h \
     utils/HttpClient.h

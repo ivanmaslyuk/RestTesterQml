@@ -1,43 +1,19 @@
 #include <QDebug>
 #include "app.h"
+#include "db/JsonStorage.h"
+#include "Models/treeitem.h"
 
 App::App(QObject *parent) : QObject(parent)
 {
     qDebug() << "REST Tester app launched!";
 
-    m_activeRequest = Request::empty(this);
+    m_activeRequest = new Request(this);
 
-    // <TEST DATA>
-    m_rootRequestTreeNode = new RequestTreeNode(this);
-
-    Request *r1 = new Request("http://example.com",
-                                        {new ParamModel("query 1", "val1")},
-                                        {new ParamModel("data param 1", "val1")},
-                                        {new ParamModel("header 1", "val1")},
-                                        "raw data 1",
-                                        "GET",
-                                        "name",
-                                        "text/plain",
-                                        "documentation 1",
-                                        this);
-    RequestTreeNode *firstNode = new RequestTreeNode(m_rootRequestTreeNode);
-    firstNode->setRequest(r1);
-
-    Request *r2 = new Request("http://postman-echo.com/post?q=cars",
-                                        {new ParamModel("q", "cars", false)},
-                                        {new ParamModel("class", "S", false)},
-                                        {new ParamModel("mobile-version", "1", false)},
-                                        "{\"brand\": \"Toyota\"}",
-                                        "POST",
-                                        "Postman Echo",
-                                        "application/json",
-                                        "documentation 2",
-                                        this);
-    RequestTreeNode *sNode = new RequestTreeNode(m_rootRequestTreeNode);
-    sNode->setRequest(r2);
-    // </TEST DATA>
+    m_storage = new SQLiteStorage(this);
+    m_rootRequestTreeNode = m_storage->getRequestTree();
 
     m_requestTreeModel = new TreeModel(m_rootRequestTreeNode, this);
+
     m_httpClient = new HttpClient(this);
 }
 
@@ -48,7 +24,6 @@ Request *App::activeRequest() const
 
 void App::setActiveRequest(Request *request)
 {
-    qDebug() << "Active request is now " + request->name();
     m_activeRequest = request;
     emit activeRequestChanged(request);
 }
@@ -61,6 +36,76 @@ HttpClient *App::httpClient() const
 TreeModel *App::requestTreeModel() const
 {
     return m_requestTreeModel;
+}
+
+void App::saveCurrentRequest()
+{
+    QObject *parentNode = m_activeRequest->parent();
+    RequestTreeNode *node = static_cast<RequestTreeNode *>(parentNode);
+    if (!node) {
+        qDebug() << "Can't get parent of current request";
+        return;
+    }
+
+    if (node->localId() != -1)
+        m_storage->saveNode(node);
+    else
+        m_storage->saveNode(node);
+
+    node->request()->setEdited(false);
+}
+
+void App::createRequest(QString name, QString method, QModelIndex index)
+{
+    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
+
+    // Assuming that index is not referring to the root node,
+    // so the parent of the node can only be another node.
+    RequestTreeNode *parentNode;
+    if (node->isFolder())
+        parentNode = node;
+    else
+        parentNode = static_cast<RequestTreeNode *>(node->parent());
+
+    RequestTreeNode *newNode = new RequestTreeNode(parentNode);
+    newNode->setIsFolder(false);
+
+    Request *request = new Request(newNode);
+    request->setName(name);
+    request->setMethod(method);
+    newNode->setRequest(request);
+    request->setEdited(false);
+
+    m_storage->createNode(newNode);
+
+    QModelIndex parentIndex = node->isFolder() ? index : index.parent();
+    m_requestTreeModel->insertRow(0, parentIndex);
+    m_requestTreeModel->setData(m_requestTreeModel->index(0, 0, parentIndex), QVariant::fromValue(newNode));
+}
+
+void App::createFolder(QString name, QModelIndex index)
+{
+    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
+
+    // Assuming that index is not referring to the root node,
+    // so the parent of the node can only be another node.
+    RequestTreeNode *parentNode;
+    if (node->isFolder())
+        parentNode = node;
+    else
+        parentNode = static_cast<RequestTreeNode *>(node->parent());
+
+    RequestTreeNode *newNode = new RequestTreeNode(parentNode);
+    newNode->setIsFolder(true);
+    newNode->setFolderName(name);
+
+    m_storage->createNode(newNode);
+
+    QModelIndex parentIndex = node->isFolder() ? index : index.parent();
+    m_requestTreeModel->insertRow(0, parentIndex);
+    m_requestTreeModel->setData(m_requestTreeModel->index(0, 0, parentIndex), QVariant::fromValue(newNode));
 }
 
 void App::requestTreeItemActivated(QModelIndex index)

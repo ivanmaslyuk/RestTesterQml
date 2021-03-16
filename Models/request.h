@@ -23,16 +23,19 @@ class Request : public QObject {
     Q_PROPERTY(ParamsItemModel* headersModel READ headersModel CONSTANT)
 
 public:
-    explicit Request(QString url, QList<ParamModel *> queryParams,
-                          QList<ParamModel *> dataParams, QList<ParamModel *> headers,
-                          QString rawData, QString method, QString name, QString contentType,
-                          QString documentation, QObject *parent = nullptr);
+    explicit Request(QObject *parent = nullptr);
+    explicit Request(int localId, QObject *parent = nullptr);
 
     static Request *empty(QObject *parent = nullptr);
 
     QByteArray data();
 
+    int localId() const;
+    void setLocalId(int id);
+
     bool edited() const;
+    void setEdited(bool edited);
+
     QString url() const;
     QList<ParamModel *> queryParams() const;
     QList<ParamModel *> dataParams() const;
@@ -59,8 +62,8 @@ public:
 private:
     QString toUrlencoded(QList<ParamModel *> params);
     QList<ParamModel *> fromUrlencoded(QString urlencoded);
-    void setEdited(bool edited);
 
+    int m_localId;
     bool m_edited;
     QString m_url;
     QList<ParamModel *> m_queryParams;

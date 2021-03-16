@@ -3,6 +3,23 @@
 RequestTreeNode::RequestTreeNode(QObject *parent) : QObject(parent)
 {
     m_isFolder = false;
+    m_localId = -1;
+}
+
+RequestTreeNode::RequestTreeNode(int localId, QObject *parent)
+    : RequestTreeNode(parent)
+{
+    m_localId = localId;
+}
+
+int RequestTreeNode::localId() const
+{
+    return m_localId;
+}
+
+void RequestTreeNode::setLocalId(int id)
+{
+    m_localId = id;
 }
 
 Request *RequestTreeNode::request() const

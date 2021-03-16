@@ -5,7 +5,8 @@ ParamsItemModel::ParamsItemModel(QList<ParamModel *> *params, QObject *parent)
     : QAbstractItemModel(parent)
 {
     m_params = params;
-    m_params->append(new ParamModel("", ""));
+    if (m_params->isEmpty() || !m_params->last()->isEmpty())
+        m_params->append(new ParamModel("", ""));
 }
 
 QHash<int, QByteArray> ParamsItemModel::roleNames() const
@@ -97,7 +98,8 @@ void ParamsItemModel::replaceData(QList<ParamModel *> newParams)
     beginResetModel();
     m_params->clear();
     m_params->append(newParams);
-    m_params->append(new ParamModel("", ""));
+    if (m_params->isEmpty() || !m_params->last()->isEmpty())
+        m_params->append(new ParamModel("", ""));
     endResetModel();
 }
 

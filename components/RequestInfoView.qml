@@ -42,6 +42,12 @@ ColumnLayout  {
         Rectangle { Layout.fillWidth: true }
 
         LinkButton {
+            visible: request.edited
+            text: qsTr("Сохранить")
+            onClicked: app.saveCurrentRequest()
+        }
+
+        LinkButton {
             text: documentationShown ? qsTr("Скрыть документацию") : qsTr("Документация")
             Layout.alignment: Qt.AlignVCenter
 
