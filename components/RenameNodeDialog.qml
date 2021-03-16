@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 
 Dialog {
     width: 400
-    height: contentItem.implicitHeight
+    height: 150
     title: qsTr("Переименовать")
 
     property var _parentIndex: null

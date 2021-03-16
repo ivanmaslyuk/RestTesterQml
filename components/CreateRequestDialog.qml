@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 
 Dialog {
     width: 400
-    height: contentItem.implicitHeight
+    height: 400
     title: qsTr("Новый запрос")
 
     property var _parentIndex: null
