@@ -15,5 +15,6 @@
         <file>components/ProgressIndicator.qml</file>
         <file>components/CreateRequestDialog.qml</file>
         <file>components/CreateFolderDialog.qml</file>
+        <file>components/Notification.qml</file>
     </qresource>
 </RCC>
