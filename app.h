@@ -27,6 +27,8 @@ public:
     Q_INVOKABLE void saveCurrentRequest();
     Q_INVOKABLE void createRequest(QString name, QString method, QModelIndex index);
     Q_INVOKABLE void createFolder(QString name, QModelIndex index);
+    Q_INVOKABLE void renameNode(QString newName, QModelIndex index);
+    Q_INVOKABLE void deleteNode(QModelIndex index);
 
 private:
     TreeModel *m_requestTreeModel;

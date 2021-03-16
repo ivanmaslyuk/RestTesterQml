@@ -14,6 +14,7 @@ public:
     RequestTreeNode *getRequestTree();
     void saveNode(RequestTreeNode *node);
     void createNode(RequestTreeNode *node);
+    void deleteNode(RequestTreeNode *node);
 
 private:
     QList<ParamModel *> paramsFromJson(QString json);

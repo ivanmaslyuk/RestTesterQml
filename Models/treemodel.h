@@ -36,11 +36,13 @@ public:
                     const QModelIndex &parent = QModelIndex()) override;
     QHash<int, QByteArray> roleNames() const override;
 
+    TreeItem *rootItem() const;
+
 private:
     void setupModelData(RequestTreeNode *rootNode, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
 
-    TreeItem *rootItem;
+    TreeItem *m_rootItem;
 };
 
 #endif // TREEMODEL_H

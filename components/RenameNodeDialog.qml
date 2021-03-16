@@ -1,5 +1,5 @@
 import QtQuick 2.3
-import QtQuick.Controls 2.15
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.12
 
@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.12
 Dialog {
     width: 400
     height: contentItem.implicitHeight
-    title: qsTr("Новая папка")
+    title: qsTr("Переименовать")
 
     property var _parentIndex: null
 
@@ -23,7 +23,7 @@ Dialog {
         anchors.fill: parent
 
         Text {
-            text: qsTr("Новая папка")
+            text: qsTr("Переименовать")
             font.pixelSize: 16
             Layout.topMargin: 12
             Layout.leftMargin: 16
@@ -62,9 +62,9 @@ Dialog {
             }
 
             CustomButton {
-                text: "СОЗДАТЬ"
+                text: "СОХРАНИТЬ"
                 onClicked: {
-                    app.createFolder(nameField.text, _parentIndex)
+                    app.renameNode(nameField.text, _parentIndex)
                     close()
                 }
             }

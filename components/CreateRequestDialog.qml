@@ -16,6 +16,7 @@ Dialog {
         nameField.text = ""
         methodSelect.currentIndex = 0
         open()
+        nameField.focus = true
     }
 
     contentItem: ColumnLayout {

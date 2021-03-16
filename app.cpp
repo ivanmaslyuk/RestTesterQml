@@ -57,11 +57,14 @@ void App::saveCurrentRequest()
 
 void App::createRequest(QString name, QString method, QModelIndex index)
 {
-    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    TreeItem *treeItem;
+    if (index.isValid())
+        treeItem = static_cast<TreeItem *>(index.internalPointer());
+    else
+        treeItem = m_requestTreeModel->rootItem();
+
     RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
 
-    // Assuming that index is not referring to the root node,
-    // so the parent of the node can only be another node.
     RequestTreeNode *parentNode;
     if (node->isFolder())
         parentNode = node;
@@ -86,11 +89,14 @@ void App::createRequest(QString name, QString method, QModelIndex index)
 
 void App::createFolder(QString name, QModelIndex index)
 {
-    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    TreeItem *treeItem;
+    if (index.isValid())
+        treeItem = static_cast<TreeItem *>(index.internalPointer());
+    else
+        treeItem = m_requestTreeModel->rootItem();
+
     RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
 
-    // Assuming that index is not referring to the root node,
-    // so the parent of the node can only be another node.
     RequestTreeNode *parentNode;
     if (node->isFolder())
         parentNode = node;
@@ -106,6 +112,33 @@ void App::createFolder(QString name, QModelIndex index)
     QModelIndex parentIndex = node->isFolder() ? index : index.parent();
     m_requestTreeModel->insertRow(0, parentIndex);
     m_requestTreeModel->setData(m_requestTreeModel->index(0, 0, parentIndex), QVariant::fromValue(newNode));
+}
+
+void App::renameNode(QString newName, QModelIndex index)
+{
+    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
+
+    if (node->isFolder())
+        node->setFolderName(newName);
+    else {
+        node->request()->setName(newName);
+        node->request()->setEdited(false);
+    }
+
+    m_storage->saveNode(node);
+
+    m_requestTreeModel->setData(index, QVariant::fromValue(node));
+}
+
+void App::deleteNode(QModelIndex index)
+{
+    TreeItem *treeItem = static_cast<TreeItem *>(index.internalPointer());
+    RequestTreeNode *node = treeItem->data().value<RequestTreeNode *>();
+
+    m_storage->deleteNode(node);
+
+    m_requestTreeModel->removeRow(index.row(), index.parent());
 }
 
 void App::requestTreeItemActivated(QModelIndex index)

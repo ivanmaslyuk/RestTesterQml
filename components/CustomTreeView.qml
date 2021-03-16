@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.6
 import QtQuick.Layouts 1.12
+import QtQml.Models 2.15
 
 TreeView {
     id: control
@@ -17,6 +18,38 @@ TreeView {
 
     CreateRequestDialog { id: createDialog }
     CreateFolderDialog { id: createFolderDialog }
+    RenameNodeDialog { id: renameNodeDialog }
+
+    Menu {
+        id: contextMenu
+        property var _index: null
+        property bool _showNodeActions: true
+
+        function show(index, showNodeActions = true) {
+            contextMenu._index = index
+            contextMenu._showNodeActions = showNodeActions
+            popup()
+        }
+
+        MenuItem {
+            visible: contextMenu._showNodeActions
+            text: qsTr("Переименовать")
+            onTriggered: renameNodeDialog.show(contextMenu._index)
+        }
+        MenuItem {
+            text: qsTr("Создать папку")
+            onTriggered: createFolderDialog.show(contextMenu._index)
+        }
+        MenuItem {
+            text: qsTr("Создать запрос")
+            onTriggered: createDialog.show(contextMenu._index)
+        }
+        MenuItem {
+            visible: contextMenu._showNodeActions
+            text: qsTr("Удалить")
+            onTriggered: app.deleteNode(contextMenu._index)
+        }
+    }
 
     itemDelegate: Rectangle {
         color: "transparent"
@@ -39,34 +72,14 @@ TreeView {
                 color: (control.activeFocus && styleData.selected) ? "white" : "black"
                 Layout.fillWidth: true
             }
-
-
         }
 
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.RightButton
-            onClicked: contextMenu.popup()
-
-            Menu {
-                id: contextMenu
-                MenuItem {
-                    text: qsTr("Переименовать")
-                }
-                MenuItem {
-                    text: qsTr("Создать папку")
-                    onTriggered: createFolderDialog.show(styleData.index)
-                }
-                MenuItem {
-                    text: qsTr("Создать запрос")
-                    onTriggered: createDialog.show(styleData.index)
-                }
-                MenuItem {
-                    text: qsTr("Удалить")
-                    onTriggered: console.log(styleData.index, 'delete')
-                }
-            }
+            onClicked: contextMenu.show(styleData.index)
+            z: 100
         }
     }
 
@@ -88,5 +101,12 @@ TreeView {
 
     onActivated: {
         app.requestTreeItemActivated(index)
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: contextMenu.show(rootIndex, false)
+        z: -1
     }
 }

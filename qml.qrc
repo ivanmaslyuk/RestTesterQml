@@ -16,5 +16,6 @@
         <file>components/CreateRequestDialog.qml</file>
         <file>components/CreateFolderDialog.qml</file>
         <file>components/Notification.qml</file>
+        <file>components/RenameNodeDialog.qml</file>
     </qresource>
 </RCC>

@@ -6,13 +6,13 @@
 TreeModel::TreeModel(RequestTreeNode *rootNode, QObject *parent)
     : QAbstractItemModel(parent)
 {
-    rootItem = new TreeItem(QVariant::fromValue(rootNode));
-    setupModelData(rootNode, rootItem);
+    m_rootItem = new TreeItem(QVariant::fromValue(rootNode));
+    setupModelData(rootNode, m_rootItem);
 }
 
 TreeModel::~TreeModel()
 {
-    delete rootItem;
+    delete m_rootItem;
 }
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
@@ -89,6 +89,11 @@ QHash<int, QByteArray> TreeModel::roleNames() const
     };
 }
 
+TreeItem *TreeModel::rootItem() const
+{
+    return m_rootItem;
+}
+
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -97,7 +102,7 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
     TreeItem *parentItem;
 
     if (!parent.isValid())
-        parentItem = rootItem;
+        parentItem = m_rootItem;
     else
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
 
@@ -115,7 +120,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
     TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
     TreeItem *parentItem = childItem->parentItem();
 
-    if (parentItem == rootItem)
+    if (parentItem == m_rootItem)
         return QModelIndex();
 
     return createIndex(parentItem->childNumber(), 0, parentItem);
@@ -169,5 +174,5 @@ TreeItem *TreeModel::getItem(const QModelIndex &index) const
         if (item)
             return item;
     }
-    return rootItem;
+    return m_rootItem;
 }

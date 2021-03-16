@@ -21,6 +21,10 @@ SQLiteStorage::SQLiteStorage(QObject *parent) : QObject(parent)
 
     if (!m_db.isOpen()) {
         qDebug() << "Could not open database";
+    } else {
+        QSqlQuery query;
+        query.exec("PRAGMA foreign_keys = ON;");
+        handleErrors(query);
     }
 }
 
@@ -100,7 +104,7 @@ void SQLiteStorage::saveNode(RequestTreeNode *node)
     if (parentNode->localId() != -1) {
         nodeQuery.bindValue(":parent_id", parentNode->localId());
     } else {
-        nodeQuery.bindValue(":parent_id", "NULL");
+        nodeQuery.bindValue(":parent_id", QVariant());
     }
 
     nodeQuery.exec();
@@ -158,6 +162,20 @@ void SQLiteStorage::createNode(RequestTreeNode *node)
     saveNode(node);
 
     m_db.commit();
+}
+
+void SQLiteStorage::deleteNode(RequestTreeNode *node)
+{
+    if (node->localId() == -1) {
+        qDebug() << "Cannot delete node that hasn't been created in the db";
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("DELETE FROM node WHERE id = :id");
+    query.bindValue(":id", node->localId());
+    query.exec();
+    handleErrors(query);
 }
 
 QList<ParamModel *> SQLiteStorage::paramsFromJson(QString json)
