@@ -17,5 +17,7 @@
         <file>components/CreateFolderDialog.qml</file>
         <file>components/Notification.qml</file>
         <file>components/RenameNodeDialog.qml</file>
+        <file>components/ResponseWrapper.qml</file>
+        <file>components/Spinner.qml</file>
     </qresource>
 </RCC>

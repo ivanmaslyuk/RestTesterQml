@@ -14,13 +14,16 @@ public:
     explicit HttpClient(QObject *parent = nullptr);
 
     Q_INVOKABLE void makeRequest(Request *request);
+    Q_INVOKABLE void abortRequest();
 
 private:
     QNetworkAccessManager *m_networkAccessManager;
     QElapsedTimer *m_timer;
+    QNetworkReply *pendingReply;
 
 signals:
     void responseUpdated(Response *response);
+    void requestStarted();
 
 private slots:
     void requestFinished(QNetworkReply *reply);

@@ -25,17 +25,8 @@ Window {
         anchors.fill: parent
 
         handle: Rectangle {
-            implicitWidth: 5
-            color: "transparent"
-
-            Rectangle {
-                implicitWidth: 1
-                color: "#EEEEEE"
-
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-            }
+            implicitWidth: 3
+            color: "#EEEEEE"
         }
 
         ColumnLayout {

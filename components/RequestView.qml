@@ -9,15 +9,8 @@ SplitView {
     id: control
 
     handle: Rectangle {
-        implicitWidth: 2
-
-        Rectangle {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            color: "#EEEEEE"
-            width: 1
-        }
+        color: "#EEEEEE"
+        implicitWidth: 3
     }
 
     SplitView {
@@ -29,7 +22,7 @@ SplitView {
 
         handle: Rectangle {
             color: "#EEEEEE"
-            implicitHeight: 1
+            implicitHeight: 3
         }
 
         RequestInfoView {
@@ -37,8 +30,7 @@ SplitView {
             SplitView.minimumHeight: implicitHeight
         }
 
-        ResponseView {
-            id: responseView
+        ResponseWrapper {
             SplitView.minimumHeight: 40
             SplitView.fillHeight: true
         }

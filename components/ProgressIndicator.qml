@@ -5,10 +5,10 @@ Rectangle {
 
     property string backgroundColor: "#EEEEEE"
     property string indicatorColor: "#2962FF"
-
-    color: backgroundColor
     height: 3
-    width: 800
+    width: 100
+    color: backgroundColor
+    clip: true
 
     property int _duration: 1000
 
@@ -26,7 +26,30 @@ Rectangle {
         }
     }
 
+    onWidthChanged: {
+        anim1.running = false
+        parallelAnim.running = false
+        anim1.from = -rect.width
+        anim1.to = control.width
+
+        anim2.from = rect.width
+        anim2.to = rect.width / 2
+
+        anim3.from = rect.width / 2
+        anim3.to = rect.width
+
+        anim4.from = 0
+        anim4.to = rect.width / 4
+
+        anim5.from = rect.width / 4
+        anim5.to = 0
+
+        anim1.running = true
+        parallelAnim.running = true
+    }
+
     NumberAnimation {
+        id: anim1
         target: rect
         property: "x"
         from: -rect.width
@@ -38,11 +61,13 @@ Rectangle {
     }
 
     ParallelAnimation {
+        id: parallelAnim
         running: true
         loops: Animation.Infinite
 
         SequentialAnimation {
             NumberAnimation {
+                id: anim2
                 target: nestedRect
                 property: "width"
                 from: rect.width
@@ -51,6 +76,7 @@ Rectangle {
                 easing.type: Easing.OutSine
             }
             NumberAnimation {
+                id: anim3
                 target: nestedRect
                 property: "width"
                 from: rect.width / 2
@@ -62,6 +88,7 @@ Rectangle {
 
         SequentialAnimation {
             NumberAnimation {
+                id: anim4
                 target: nestedRect
                 property: "x"
                 from: 0
@@ -70,6 +97,7 @@ Rectangle {
                 easing.type: Easing.OutSine
             }
             NumberAnimation {
+                id: anim5
                 target: nestedRect
                 property: "x"
                 from: rect.width / 4

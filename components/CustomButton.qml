@@ -20,7 +20,7 @@ Button {
         if (emphasis === "high")
             return "#304FFE"
         else if (emphasis === "medium")
-            return "#cccccc"
+            return "#DDDDDD"
     }
 
     function getTextColor() {

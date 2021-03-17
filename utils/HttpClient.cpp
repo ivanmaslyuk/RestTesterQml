@@ -11,6 +11,11 @@ HttpClient::HttpClient(QObject *parent) : QObject(parent)
 
 void HttpClient::makeRequest(Request *request)
 {
+    if (pendingReply)
+        return; // Don't make new request if there is one already running
+
+    emit requestStarted();
+
     QNetworkRequest networkRequest(QUrl(request->url()));
     networkRequest.setHeader(QNetworkRequest::UserAgentHeader, "RestTester/0.1");
 
@@ -26,14 +31,25 @@ void HttpClient::makeRequest(Request *request)
     m_timer->start();
     QByteArray data = request->data();
     if (sendData) {
-        m_networkAccessManager->sendCustomRequest(networkRequest, method.toUtf8(), data);
+        pendingReply = m_networkAccessManager->sendCustomRequest(networkRequest,
+                                                                 method.toUtf8(), data);
     } else {
-        m_networkAccessManager->sendCustomRequest(networkRequest, method.toUtf8());
+        pendingReply = m_networkAccessManager->sendCustomRequest(networkRequest, method.toUtf8());
     }
+}
+
+void HttpClient::abortRequest()
+{
+    if (!pendingReply)
+        return;
+
+    pendingReply->abort();
 }
 
 void HttpClient::requestFinished(QNetworkReply *reply)
 {
+    pendingReply = nullptr;
+
     reply->setProperty("time", QVariant::fromValue<qint64>(m_timer->elapsed()));
     Response *response = new Response(reply, this);
     emit responseUpdated(response);
