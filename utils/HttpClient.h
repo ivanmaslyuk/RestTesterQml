@@ -19,13 +19,14 @@ public:
 private:
     QNetworkAccessManager *m_networkAccessManager;
     QElapsedTimer *m_timer;
-    QNetworkReply *pendingReply;
+    QNetworkReply *m_pendingReply;
 
 signals:
     void responseUpdated(Response *response);
     void requestStarted();
 
 private slots:
+    void handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
     void requestFinished(QNetworkReply *reply);
 };
 
