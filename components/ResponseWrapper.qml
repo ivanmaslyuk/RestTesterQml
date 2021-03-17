@@ -10,12 +10,24 @@ StackLayout {
             currentIndex = 1
         }
         function onResponseUpdated() {
+            currentIndex = 2
+        }
+    }
+
+    Connections {
+        target: app
+        function onActiveRequestChanged(request) {
             currentIndex = 0
         }
     }
 
-    ResponseView {
-        id: responseView
+    Rectangle {
+        id: noResponseView
+
+        Text {
+            text: "Нажмите «Отправить», чтобы получить ответ"
+            anchors.centerIn: parent
+        }
     }
 
     Rectangle {
@@ -39,6 +51,10 @@ StackLayout {
                 }
             }
         }
+    }
+
+    ResponseView {
+        id: responseView
     }
 
 }
