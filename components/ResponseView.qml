@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.15
+import RestTesterUI 1.0
 
 import "."
 
@@ -64,20 +65,53 @@ ColumnLayout {
         id: stackLayout
         currentIndex: tabBar.currentIndex
 
-        ScrollView {
-            id: scrollView
+//        ScrollView {
+//            id: scrollView
+//            clip: true
+
+//            TextEdit {
+//                id: bodyTextEdit
+//                text: response ? response.body : ""
+//                font.family: "Consolas"
+//                font.pixelSize: 12
+//                selectByMouse: true
+//                readOnly: true
+//                textMargin: 4
+//            }
+
+
+//        }
+
+        Flickable {
+            id: bodyFlickable
+            contentHeight: responseText.height
+            contentWidth: responseText.width
+            boundsBehavior: Flickable.StopAtBounds
+            interactive: false
             clip: true
 
-            TextEdit {
-                id: bodyTextEdit
+            ScrollBar.horizontal: ScrollBar {}
+            ScrollBar.vertical: ScrollBar {}
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.MiddleButton
+                onWheel: {
+                    const delta = wheel.angleDelta.y
+                    if (delta > 0)
+                        bodyFlickable.contentY = Math.max(0, bodyFlickable.contentY - delta)
+                    else
+                        bodyFlickable.contentY = Math.min(bodyFlickable.contentHeight - bodyFlickable.height,
+                                                          bodyFlickable.contentY - delta)
+                }
+            }
+
+            PlainText {
+                id: responseText
                 text: response ? response.body : ""
-                font.family: "Consolas"
-                font.pixelSize: 12
-                selectByMouse: true
-                readOnly: true
-                textMargin: 4
             }
         }
+
 
         Rectangle {
             ParamsTable {

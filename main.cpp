@@ -4,6 +4,8 @@
 #include <QQmlContext>
 #include "app.h"
 #include "Models/treemodel.h"
+#include "ui/PlainText.h"
+#include <qqml.h>
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +23,8 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    qmlRegisterType<PlainText>("RestTesterUI", 1, 0, "PlainText");
 
     App appObject;
     engine.rootContext()->setContextProperty("app", &appObject);

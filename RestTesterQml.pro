@@ -1,6 +1,9 @@
-QT += quick sql
+QT += qml quick sql
 
 CONFIG += c++11
+#CONFIG += qmltypes
+#QML_IMPORT_NAME = RestTesterUI
+#QML_IMPORT_MAJOR_VERSION = 1
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -18,6 +21,7 @@ SOURCES += \
         db/SQLiteStorage.cpp \
         item_models/ParamsItemModel.cpp \
         main.cpp \
+        ui/PlainText.cpp \
         utils/HttpClient.cpp
 
 RESOURCES += qml.qrc
@@ -47,4 +51,5 @@ HEADERS += \
     db/JsonStorage.h \
     db/SQLiteStorage.h \
     item_models/ParamsItemModel.h \
+    ui/PlainText.h \
     utils/HttpClient.h

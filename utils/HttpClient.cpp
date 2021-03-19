@@ -52,6 +52,7 @@ void HttpClient::abortRequest()
 
 void HttpClient::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
 {
+    Q_UNUSED(reply)
     qDebug() << errors;
 }
 
