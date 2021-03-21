@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.6
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.12
 import QtQml.Models 2.15
 
@@ -8,6 +9,10 @@ TreeView {
     headerVisible: false
     model: app.requestTreeModel
     frameVisible: false
+
+    style: TreeViewStyle {
+        backgroundColor: "#f9f9f9"
+    }
 
     property int itemHeight: 24
 

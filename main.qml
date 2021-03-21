@@ -2,15 +2,16 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
+import QtGraphicalEffects 1.15
 
 import "components"
 
 Window {
-    width: 600
+    id: window
+    width: 750
     height: 600
     visible: true
     title: "REST Tester"
-//    color: "black"
 
     Rectangle {
         height: 1
@@ -21,44 +22,34 @@ Window {
         z: 100
     }
 
-    SplitView {
+    ColumnLayout {
         anchors.fill: parent
+        spacing: 0
 
-        handle: Rectangle {
-            implicitWidth: 3
-            color: "#EEEEEE"
+        AppMenu {
+            id: menu
+            Layout.fillWidth: true
         }
 
-        ColumnLayout {
-            clip: true
-            spacing: 12
-            SplitView.minimumWidth: menu.implicitWidth
-            SplitView.maximumWidth: 300
+        SplitView {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            AppMenu {
-                id: menu
-                Layout.fillWidth: true
-            }
-
-            Rectangle {
+            handle: Rectangle {
+                implicitWidth: 3
                 color: "#EEEEEE"
-                implicitHeight: 1
-
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
             }
 
             CustomTreeView {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                id: treeView
+                clip: true
+                SplitView.minimumWidth: 100
+                SplitView.maximumWidth: 250
+            }
+
+            RequestView {
+                id: requestView
             }
         }
-
-        RequestView {
-
-        }
-
     }
 }

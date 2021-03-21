@@ -24,13 +24,12 @@ void HttpClient::makeRequest(Request *request)
     networkRequest.setHeader(QNetworkRequest::UserAgentHeader, "RestTester/0.1");
 
     QString method = request->method();
-    bool sendData = QList<QString>({"GET", "OPTIONS", "HEAD"}).contains(method);
+    bool sendData = !QList<QString>({"GET", "OPTIONS", "HEAD"}).contains(method);
     if (sendData)
         networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, request->contentType());
 
-    for (ParamModel *header : request->headers()) {
+    for (ParamModel *header : request->headers())
         networkRequest.setRawHeader(header->key.toUtf8(), header->value.toUtf8());
-    }
 
     m_timer->start();
     QByteArray data = request->data();

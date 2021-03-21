@@ -43,6 +43,7 @@ ColumnLayout {
             boundsBehavior: Flickable.StopAtBounds
 
             TextArea.flickable: TextArea {
+                id: documentationShow
                 leftPadding: 16
                 rightPadding: 16
                 wrapMode: TextArea.Wrap
@@ -50,10 +51,17 @@ ColumnLayout {
                 placeholderText: qsTr("Нет документации")
                 font.pixelSize: 12
                 readOnly: true
-                text: app.activeRequest.documentation
                 textFormat: TextArea.MarkdownText
                 onLinkActivated: Qt.openUrlExternally(link)
                 onLinkHovered: { }
+
+                Connections {
+                    target: app
+                    function onActiveRequestChanged(request) {
+                        documentationShow.text = request.documentation
+                        documentationShow.update()
+                    }
+                }
             }
 
             ScrollBar.vertical: ScrollBar {}

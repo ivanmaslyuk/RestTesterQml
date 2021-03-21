@@ -3,55 +3,56 @@ import QtQuick.Layouts 1.12
 
 
 Rectangle {
-    implicitHeight: rootLayout.implicitHeight + rootLayout.anchors.topMargin
+    implicitHeight: 40
     implicitWidth: rootLayout.implicitWidth
                    + rootLayout.anchors.leftMargin + rootLayout.anchors.rightMargin
     color: "transparent"
 
-    ColumnLayout {
+    RowLayout {
         id: rootLayout
         spacing: 12
         anchors.fill: parent
         anchors.leftMargin: 16
         anchors.rightMargin: 16
-        anchors.topMargin: 12
 
-        ColumnLayout {
-            spacing: 4
+        Text {
+            font.pixelSize: 16
+            text: "REST Tester"
+            Layout.alignment: Qt.AlignVCenter
+        }
+
+        RowLayout {
+            spacing: 0
+            Layout.alignment: Qt.AlignVCenter
 
             Text {
-                font.pixelSize: 16
-                text: "REST Tester"
+                font.pixelSize: 10
+                text: "Ivan Maslyuk"
             }
 
-            RowLayout {
-                spacing: 0
-
-                Text {
-                    font.pixelSize: 10
-                    text: "Ivan Maslyuk"
-                }
-
-                Text {
-                    font.pixelSize: 10
-                    text: " - "
-                }
-
-                LinkButton {
-                    font.pixelSize: 10
-                    color: "#777777"
-                    text: qsTr("Выйти")
-                }
+            Text {
+                font.pixelSize: 10
+                text: " - "
             }
+
+            LinkButton {
+                font.pixelSize: 10
+                color: "#777777"
+                text: qsTr("Выйти")
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
         }
 
         StyledComboBox {
             textRole: "text"
             valueRole: "value"
+            Layout.alignment: Qt.AlignVCenter
             font.pixelSize: 14
             implicitHeight: 26
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
+            implicitWidth: 200
             model: [
                 { value: "Reddit API", text: "Reddit API" },
                 { value: "Reddit API", text: "VK API" },
@@ -60,6 +61,14 @@ Rectangle {
             ]
         }
 
+    }
+
+    Rectangle {
+        implicitHeight: 1
+        color: "#EEEEEE"
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
 }

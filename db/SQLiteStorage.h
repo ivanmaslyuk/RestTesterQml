@@ -21,6 +21,7 @@ private:
     QString paramsToJson(QList<ParamModel *> params);
     void handleErrors(QSqlQuery query);
     QString getUuid();
+    void runMigrations();
 
     QSqlDatabase m_db;
 

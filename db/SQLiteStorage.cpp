@@ -26,6 +26,8 @@ SQLiteStorage::SQLiteStorage(QObject *parent) : QObject(parent)
         query.exec("PRAGMA foreign_keys = ON;");
         handleErrors(query);
     }
+
+    runMigrations();
 }
 
 RequestTreeNode *SQLiteStorage::getRequestTree()
@@ -212,4 +214,36 @@ void SQLiteStorage::handleErrors(QSqlQuery query)
 QString SQLiteStorage::getUuid()
 {
     return QUuid::createUuid().toString().remove('{').remove('}');
+}
+
+void SQLiteStorage::runMigrations()
+{
+    QString createNodeTable = ""
+        "create table node"
+        "("
+        "    id          integer  not null primary key autoincrement,"
+        "    uuid        CHAR(36) not null unique,"
+        "    parent_id   integer references node on delete cascade,"
+        "    is_folder   bool     not null,"
+        "    folder_name text"
+        ");";
+    QSqlQuery(createNodeTable).exec();
+
+    QString createRequestTable = ""
+        "create table request"
+        "("
+        "    id                integer  not null primary key autoincrement,"
+        "    uuid              CHAR(36) not null unique,"
+        "    node_id           integer  not null references node on delete cascade,"
+        "    name              text     not null,"
+        "    url               text,"
+        "    raw_data          text,"
+        "    method            text,"
+        "    content_type      text,"
+        "    documentation     text,"
+        "    query_params_json text,"
+        "    data_params_json  text,"
+        "    headers_json      text"
+        ");";
+    QSqlQuery(createRequestTable).exec();
 }
