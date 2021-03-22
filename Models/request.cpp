@@ -8,6 +8,8 @@ Request::Request(QObject *parent) : QObject(parent)
     m_headersModel = new ParamsItemModel(&m_headers, this);
 
     connect(m_queryParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleQueryParamsChanged);
+    connect(m_dataParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleBodyParamsChanged);
+    connect(m_headersModel, &ParamsItemModel::dataChanged, this, &Request::handleHeadersChanged);
     m_localId = -1;
 }
 
@@ -247,5 +249,15 @@ void Request::handleQueryParamsChanged()
     else
         m_url = path;
     emit urlChanged(m_url);
+}
+
+void Request::handleBodyParamsChanged()
+{
+    setEdited(true);
+}
+
+void Request::handleHeadersChanged()
+{
+    setEdited(true);
 }
 

@@ -81,6 +81,8 @@ private:
 
 private slots:
     void handleQueryParamsChanged();
+    void handleBodyParamsChanged();
+    void handleHeadersChanged();
 
 signals:
     void urlChanged(QString url);

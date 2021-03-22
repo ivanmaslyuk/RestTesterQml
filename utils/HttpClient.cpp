@@ -21,6 +21,7 @@ void HttpClient::makeRequest(Request *request)
     emit requestStarted();
 
     QNetworkRequest networkRequest(QUrl(request->url()));
+    networkRequest.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     networkRequest.setHeader(QNetworkRequest::UserAgentHeader, "RestTester/0.1");
 
     QString method = request->method();
@@ -29,7 +30,8 @@ void HttpClient::makeRequest(Request *request)
         networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, request->contentType());
 
     for (ParamModel *header : request->headers())
-        networkRequest.setRawHeader(header->key.toUtf8(), header->value.toUtf8());
+        if (header->enabled)
+            networkRequest.setRawHeader(header->key.toUtf8(), header->value.toUtf8());
 
     m_timer->start();
     QByteArray data = request->data();
