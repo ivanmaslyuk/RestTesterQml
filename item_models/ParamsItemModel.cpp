@@ -1,11 +1,12 @@
 #include "ParamsItemModel.h"
 #include <QDebug>
 
-ParamsItemModel::ParamsItemModel(QList<ParamModel *> *params, QObject *parent)
+ParamsItemModel::ParamsItemModel(QList<ParamModel *> *params, bool readOnly, QObject *parent)
     : QAbstractItemModel(parent)
 {
+    m_readOnly = readOnly;
     m_params = params;
-    if (m_params->isEmpty() || !m_params->last()->isEmpty())
+    if ((m_params->isEmpty() || !m_params->last()->isEmpty()) && !readOnly)
         m_params->append(new ParamModel("", ""));
 }
 
@@ -98,7 +99,7 @@ void ParamsItemModel::replaceData(QList<ParamModel *> newParams)
     beginResetModel();
     m_params->clear();
     m_params->append(newParams);
-    if (m_params->isEmpty() || !m_params->last()->isEmpty())
+    if ((m_params->isEmpty() || !m_params->last()->isEmpty()) && !m_readOnly)
         m_params->append(new ParamModel("", ""));
     endResetModel();
 }

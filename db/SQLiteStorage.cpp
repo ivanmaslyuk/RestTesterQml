@@ -36,7 +36,7 @@ RequestTreeNode *SQLiteStorage::getRequestTree()
     rootNode->setIsFolder(true);
 
     // Get nodes from db
-    QSqlQuery nodeQuery("SELECT * from node;");
+    QSqlQuery nodeQuery("SELECT * FROM node;");
     QMap<int, RequestTreeNode *> nodeMap;
     while (nodeQuery.next()) {
         int localId = nodeQuery.value("id").toInt();

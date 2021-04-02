@@ -44,7 +44,7 @@ Window {
                 id: treeView
                 clip: true
                 SplitView.minimumWidth: 100
-                SplitView.maximumWidth: 250
+                SplitView.maximumWidth: 400
             }
 
             RequestView {

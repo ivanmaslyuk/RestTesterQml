@@ -12,6 +12,11 @@ Rectangle {
     property bool appendEmptyRow: true
     property var model: null
 
+    function modelRowCount() {
+        if (!model) return 0
+        return model.rowCount()
+    }
+
     function fullTableVisible() {
         return rootRect.height >= control.implicitHeight
     }
@@ -147,6 +152,8 @@ Rectangle {
                     id: splitView
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    implicitHeight: modelRowCount() * 30 // Sum of row heights
+                                    + 1 * (modelRowCount() - 1) // Sum of row separator heights
 
                     handle: Rectangle {
                         id: separator

@@ -1,12 +1,14 @@
 QT += quick sql
 
 CONFIG += c++11
+# CONFIG += qtquickcompiler
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        Error.cpp \
         Models/Response.cpp \
         Models/parammodel.cpp \
         Models/request.cpp \
@@ -18,9 +20,11 @@ SOURCES += \
         db/SQLiteStorage.cpp \
         item_models/ParamsItemModel.cpp \
         main.cpp \
+        server_api/Authenticator.cpp \
         utils/HttpClient.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    icons.qrc
 
 TRANSLATIONS += \
     RestTesterQml_en_US.ts
@@ -37,6 +41,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Error.h \
     Models/Response.h \
     Models/parammodel.h \
     Models/request.h \
@@ -47,4 +52,5 @@ HEADERS += \
     db/JsonStorage.h \
     db/SQLiteStorage.h \
     item_models/ParamsItemModel.h \
+    server_api/Authenticator.h \
     utils/HttpClient.h

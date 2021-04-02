@@ -3,20 +3,30 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QFile>
 #include "Models/requesttreenode.h"
 
 class JsonStorage : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit JsonStorage(QObject *parent = nullptr);
+    explicit JsonStorage(QString filaname, QObject *parent);
 
-    RequestTreeNode *getRequestTree();
+    Q_INVOKABLE QVariant get(QString key);
+    Q_INVOKABLE void set(QString key, QVariant value);
 
 private:
-    QJsonObject readData();
-    RequestTreeNode *nodeFromJson(QJsonObject node, QObject *parent);
+    QFile *getFile();
+    void loadData();
+    void saveData();
+
+    QString m_filename;
+    QJsonObject m_object;
+    QFile *m_file;
+
+signals:
+    void settingChanged(QString key, QVariant value);
 };
+
 
 #endif // JSONSTORAGE_H

@@ -7,6 +7,8 @@ App::App(QObject *parent) : QObject(parent)
 {
     qDebug() << "REST Tester app launched!";
 
+    m_settings = new JsonStorage("settings.json", this);
+
     m_activeRequest = new Request(this);
 
     m_storage = new SQLiteStorage(this);
@@ -15,6 +17,7 @@ App::App(QObject *parent) : QObject(parent)
     m_requestTreeModel = new TreeModel(m_rootRequestTreeNode, this);
 
     m_httpClient = new HttpClient(this);
+    m_authenticator = new Authenticator(m_settings, this);
 }
 
 Request *App::activeRequest() const
@@ -36,6 +39,16 @@ HttpClient *App::httpClient() const
 TreeModel *App::requestTreeModel() const
 {
     return m_requestTreeModel;
+}
+
+Authenticator *App::authenticator() const
+{
+    return m_authenticator;
+}
+
+JsonStorage *App::settings() const
+{
+    return m_settings;
 }
 
 void App::saveCurrentRequest()

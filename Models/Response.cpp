@@ -4,7 +4,7 @@
 Response::Response(QNetworkReply *reply, QObject *parent) : QObject(parent)
 {
     applyNetworkReply(reply);
-    m_headersModel = new ParamsItemModel(&m_headers, this);
+    m_headersModel = new ParamsItemModel(&m_headers, true, this);
 }
 
 QString Response::body() const

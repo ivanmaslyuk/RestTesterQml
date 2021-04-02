@@ -7,13 +7,17 @@
 #include "Models/treemodel.h"
 #include "db/SQLiteStorage.h"
 #include "utils/HttpClient.h"
+#include "server_api/Authenticator.h"
+#include "db/JsonStorage.h"
 
 class App : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Request* activeRequest READ activeRequest WRITE setActiveRequest NOTIFY activeRequestChanged)
     Q_PROPERTY(TreeModel* requestTreeModel READ requestTreeModel NOTIFY requestTreeModelChanged)
+    Q_PROPERTY(Authenticator* authenticator READ authenticator CONSTANT)
     Q_PROPERTY(HttpClient *httpClient READ httpClient CONSTANT)
+    Q_PROPERTY(JsonStorage *settings READ settings CONSTANT)
 
 public:
     explicit App(QObject *parent = nullptr);
@@ -24,6 +28,10 @@ public:
     HttpClient *httpClient() const;
     TreeModel *requestTreeModel() const;
 
+    Authenticator *authenticator() const;
+
+    JsonStorage *settings() const;
+
     Q_INVOKABLE void saveCurrentRequest();
     Q_INVOKABLE void createRequest(QString name, QString method, QModelIndex index);
     Q_INVOKABLE void createFolder(QString name, QModelIndex index);
@@ -31,11 +39,13 @@ public:
     Q_INVOKABLE void deleteNode(QModelIndex index);
 
 private:
+    Authenticator *m_authenticator;
     TreeModel *m_requestTreeModel;
     Request *m_activeRequest;
     RequestTreeNode *m_rootRequestTreeNode;
     HttpClient *m_httpClient;
     SQLiteStorage *m_storage;
+    JsonStorage *m_settings;
 
 signals:
     void activeRequestChanged(Request *request);

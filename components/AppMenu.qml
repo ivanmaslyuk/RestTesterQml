@@ -8,6 +8,11 @@ Rectangle {
                    + rootLayout.anchors.leftMargin + rootLayout.anchors.rightMargin
     color: "transparent"
 
+    LoginDialog {
+        id: loginDialog
+        visible: false
+    }
+
     RowLayout {
         id: rootLayout
         spacing: 12
@@ -17,50 +22,52 @@ Rectangle {
 
         Text {
             font.pixelSize: 16
-            text: "REST Tester"
+            text: "Proverb"
             Layout.alignment: Qt.AlignVCenter
-        }
-
-        RowLayout {
-            spacing: 0
-            Layout.alignment: Qt.AlignVCenter
-
-            Text {
-                font.pixelSize: 10
-                text: "Ivan Maslyuk"
-            }
-
-            Text {
-                font.pixelSize: 10
-                text: " - "
-            }
-
-            LinkButton {
-                font.pixelSize: 10
-                color: "#777777"
-                text: qsTr("Выйти")
-            }
         }
 
         Rectangle {
             Layout.fillWidth: true
         }
 
-        StyledComboBox {
-            textRole: "text"
-            valueRole: "value"
+        RowLayout {
+            visible: app.authenticator.loggedIn
+            spacing: 0
             Layout.alignment: Qt.AlignVCenter
-            font.pixelSize: 14
-            implicitHeight: 26
-            implicitWidth: 200
-            model: [
-                { value: "Reddit API", text: "Reddit API" },
-                { value: "Reddit API", text: "VK API" },
-                { value: "Reddit API", text: "YouTube API" },
-                { value: "Reddit API", text: "Twitter API" },
-            ]
+
+            Text {
+                id: usernameText
+                font.pixelSize: 12
+                text: app.settings.get('username')
+
+                Connections {
+                    target: app.authenticator
+                    function onLoginStatusChanged(loggedIn) {
+                        usernameText.text = app.settings.get('username')
+                    }
+                }
+            }
+
+            Text {
+                font.pixelSize: 12
+                text: " - "
+            }
+
+            LinkButton {
+                font.pixelSize: 12
+                color: "#777777"
+                text: qsTr("Выйти")
+                onClicked: app.authenticator.logOut()
+            }
         }
 
+        LinkButton {
+            visible: !app.authenticator.loggedIn
+            font.pixelSize: 12
+            color: "#777777"
+            text: qsTr("Войти")
+            onClicked: loginDialog.open()
+        }
     }
 
     Rectangle {

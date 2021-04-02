@@ -19,5 +19,7 @@
         <file>components/RenameNodeDialog.qml</file>
         <file>components/ResponseWrapper.qml</file>
         <file>components/Spinner.qml</file>
+        <file>components/LoginDialog.qml</file>
+        <file>components/SendButton.qml</file>
     </qresource>
 </RCC>

@@ -8,112 +8,78 @@
 #include "JsonStorage.h"
 #include "Models/request.h"
 
-JsonStorage::JsonStorage(QObject *parent) : QObject(parent)
+JsonStorage::JsonStorage(QString filename, QObject *parent = nullptr)
+    : QObject(parent)
 {
-
+    m_filename = filename;
+    m_file = getFile();
+    loadData();
 }
 
-RequestTreeNode *JsonStorage::getRequestTree()
+QVariant JsonStorage::get(QString key)
 {
-    std::function<void(QJsonArray, QObject *)> getNodes;
-    getNodes = [this, getNodes](QJsonArray nodes, QObject *parentNode){
-        for (QJsonValue nodeValue : nodes) {
-            RequestTreeNode *node = nodeFromJson(nodeValue.toObject(), parentNode);
-            if (nodeValue["isFolder"].toBool())
-                getNodes(nodeValue["children"].toArray(), node);
-        }
-    };
+    return m_object[key].toVariant();
+}
 
-    QJsonObject data = readData();
-    if(!data.contains("nodes")) {
-        qDebug() << "Nodes not declared in app data";
-        return new RequestTreeNode(this);
+void JsonStorage::set(QString key, QVariant value)
+{
+    m_object[key] = QJsonValue::fromVariant(value);
+    emit settingChanged(key, value);
+    saveData();
+}
+
+void JsonStorage::loadData()
+{
+    QByteArray text;
+    if (m_file->open(QFile::ReadWrite)) {
+        text = m_file->readAll();
+        m_file->close();
+    } else {
+        qDebug() << "Could not open data file";
+        m_object = QJsonObject();
     }
 
-    RequestTreeNode *rootNode = new RequestTreeNode(this);
-    getNodes(data["nodes"].toArray(), rootNode);
+    if (text.isEmpty())
+        text = "{}";
 
-    return rootNode;
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(text, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qDebug() << "Could not parse json: " << parseError.errorString();
+        m_object = QJsonObject();
+    }
+
+    m_object = doc.object();
 }
 
-QJsonObject JsonStorage::readData()
+void JsonStorage::saveData()
+{
+    QJsonDocument doc(m_object);
+
+    if (m_file->open(QFile::WriteOnly)) {
+        m_file->write(doc.toJson());
+        m_file->close();
+    } else {
+        qDebug() << "Could not open data file for writing";
+    }
+}
+
+QFile *JsonStorage::getFile()
 {
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (appDataPath.isEmpty()) {
         qDebug() << QString("Writable app data location not found");
-        return QJsonObject();
+        return nullptr;
     }
     QDir appDataDir = QDir(appDataPath);
     if (!appDataDir.exists()) {
         bool created = QDir().mkpath(appDataPath);
         if (!created) {
             qDebug() << QString("Could not create app data directory");
-            return QJsonObject();
+            return nullptr;
         }
     }
 
-    QFile file(appDataDir.absoluteFilePath("data.json"));
-    QByteArray text;
-    if (file.open(QFile::ReadWrite)) {
-        text = file.readAll();
-        file.close();
-    } else {
-        qDebug() << "Could not open data file";
-        return QJsonObject();
-    }
-
-    if (text.isEmpty())
-        text = "{ \"nodes\": [] }";
-
-    QJsonParseError parseError;
-    QJsonDocument doc = QJsonDocument::fromJson(text, &parseError);
-    if (parseError.error != QJsonParseError::NoError) {
-        qDebug() << "Could not parse json: " << parseError.errorString();
-        return QJsonObject();
-    }
-
-    return doc.object();
-}
-
-RequestTreeNode *JsonStorage::nodeFromJson(QJsonObject node, QObject *parentObject)
-{
-    RequestTreeNode *result = new RequestTreeNode(parentObject);
-    result->setIsFolder(node["isFolder"].toBool());
-
-    if (result->isFolder()) {
-        result->setFolderName(node["folderName"].toString());
-    } else {
-        QJsonValue requestData = node["request"];
-
-        QList<ParamModel *> queryParams;
-        for (QJsonValue value : requestData["queryParams"].toArray())
-            queryParams.append(new ParamModel(value["key"].toString(),
-                               value["value"].toString(), value["enabled"].toBool()));
-
-        QList<ParamModel *> dataParams;
-        for (QJsonValue value : requestData["dataParams"].toArray())
-            dataParams.append(new ParamModel(value["key"].toString(),
-                               value["value"].toString(), value["enabled"].toBool()));
-
-        QList<ParamModel *> headers;
-        for (QJsonValue value : requestData["headers"].toArray())
-            headers.append(new ParamModel(value["key"].toString(),
-                               value["value"].toString(), value["enabled"].toBool()));
-
-        Request *request = new Request(
-//                    requestData["url"].toString(),
-//                    queryParams,
-//                    dataParams,
-//                    headers,
-//                    requestData["rawData"].toString(),
-//                    requestData["method"].toString(),
-//                    requestData["name"].toString(),
-//                    requestData["contentType"].toString(),
-//                    requestData["documentation"].toString(),
-                    this);
-
-        result->setRequest(request);
-    }
-
-    return result;
+    QFile *file = new QFile(appDataDir.absoluteFilePath(m_filename));
+    return file;
 }

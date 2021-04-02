@@ -84,7 +84,7 @@ ColumnLayout {
                 id: headersTable
                 readOnly: true
                 appendEmptyRow: false
-    //            showCheckBox: false
+                showCheckBox: false
                 model: response ? response.headersModel : null
 
                 anchors.fill: parent

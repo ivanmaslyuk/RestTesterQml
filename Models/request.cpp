@@ -3,9 +3,9 @@
 
 Request::Request(QObject *parent) : QObject(parent)
 {
-    m_queryParamsModel = new ParamsItemModel(&m_queryParams, this);
-    m_dataParamsModel = new ParamsItemModel(&m_dataParams, this);
-    m_headersModel = new ParamsItemModel(&m_headers, this);
+    m_queryParamsModel = new ParamsItemModel(&m_queryParams, false, this);
+    m_dataParamsModel = new ParamsItemModel(&m_dataParams, false, this);
+    m_headersModel = new ParamsItemModel(&m_headers, false, this);
 
     connect(m_queryParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleQueryParamsChanged);
     connect(m_dataParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleBodyParamsChanged);

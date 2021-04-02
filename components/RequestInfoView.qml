@@ -148,11 +148,10 @@ ColumnLayout  {
             }
         }
 
-        CustomButton {
-            id: sendButton
-            Layout.fillHeight: true
-            text: "ОТПРАВИТЬ"
-            onPressed: app.httpClient.makeRequest(app.activeRequest)
+        SendButton {
+            function onClicked() {
+                app.httpClient.makeRequest(app.activeRequest)
+            }
         }
     }
 
@@ -212,7 +211,7 @@ ColumnLayout  {
         Layout.leftMargin: 16
         Layout.rightMargin: 16
         Layout.bottomMargin: 12
-        Layout.minimumHeight: 60
+        Layout.minimumHeight: 63
 
         ParamsTable {
             id: queryParamsTable

@@ -9,7 +9,7 @@ class ParamsItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit ParamsItemModel(QList<ParamModel *> *params, QObject *parent = nullptr);
+    explicit ParamsItemModel(QList<ParamModel *> *params, bool readOnly, QObject *parent = nullptr);
 
     enum DataRole {
         IsEnabled,
@@ -33,6 +33,7 @@ private:
     void appendEmptyRow();
 
     QList<ParamModel *> *m_params;
+    bool m_readOnly;
 
 signals:
     void emptyRowAppended();

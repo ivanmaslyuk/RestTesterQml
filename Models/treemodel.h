@@ -16,7 +16,8 @@ public:
 
     enum Roles {
         name,
-        method
+        method,
+        isFolder,
     };
     Q_ENUM(Roles)
 

@@ -11,7 +11,17 @@ TreeView {
     frameVisible: false
 
     style: TreeViewStyle {
+        transientScrollBars: true
         backgroundColor: "#f9f9f9"
+        indentation: 0
+
+        branchDelegate: Image {
+            width: 8
+            height: 8
+            x: 16 + 12 * styleData.depth + width
+            rotation: styleData.isExpanded ? 90 : 0
+            source: "/icons/tree_branch.svg"
+        }
     }
 
     property int itemHeight: 24
@@ -61,20 +71,38 @@ TreeView {
 
         RowLayout {
             anchors.fill: parent
+            anchors.leftMargin: 16 + 12 * styleData.depth
+                                + (model.isFolder ? 8 : 0) // Last number is branchDelegate.width
             spacing: 4
 
             Text {
                 font.pixelSize: 14
                 font.bold: true
-                color: "orange"
-                text: model.method ? model.method : ""
+                color: getMethodColor(model.method)
+                text: model.isFolder ? "" : model.method
+
+                function getMethodColor(method) {
+                    switch (method) {
+                    case "GET":
+                        return "#1565C0"
+                    case "POST":
+                        return "#EF6C00"
+                    case "DELETE":
+                        return "#D84315"
+                    case "PUT":
+                        return "#2E7D32"
+                    case "PATCH":
+                        return "#558B2F"
+                    default:
+                        return "#4527A0"
+                    }
+                }
             }
 
             Text {
                 id: nameText
                 font.pixelSize: 14
                 text: styleData.value
-                color: (control.activeFocus && styleData.selected) ? "white" : "black"
                 Layout.fillWidth: true
             }
         }
@@ -89,19 +117,20 @@ TreeView {
     }
 
     rowDelegate: Rectangle {
-        function getColor() {
-            if (!styleData.selected) return "transparent"
-
-            if (control.activeFocus) {
-                return "#424242"
-            }
-
-            return "#EEEEEE"
-        }
-
         id: rowDelegate
-        color: getColor()
+        color: (styleData.selected | _hovered) ? "#F0F0F0" : "transparent"
         height: itemHeight
+
+        property bool _hovered: false
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+
+            onEntered: rowDelegate._hovered = true
+            onExited: rowDelegate._hovered = false
+        }
     }
 
     onActivated: {

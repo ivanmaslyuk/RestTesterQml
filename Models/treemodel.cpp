@@ -23,11 +23,13 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
     RequestTreeNode *node = item->data().value<RequestTreeNode*>();
 
-    if (role == 0) {
+    if (role == Roles::name) {
         return node->isFolder() ? node->folderName() : node->request()->name();
     }
-    else if (role == 1) {
+    else if (role == Roles::method) {
         return node->isFolder() ? QVariant() : node->request()->method();
+    } else if (role == Roles::isFolder) {
+        return node->isFolder();
     }
 
     return QVariant();
@@ -85,7 +87,8 @@ QHash<int, QByteArray> TreeModel::roleNames() const
 {
     return {
         {Roles::name, "name"},
-        {Roles::method, "method"}
+        {Roles::method, "method"},
+        {Roles::isFolder, "isFolder"},
     };
 }
 
