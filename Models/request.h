@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonObject>
 #include "parammodel.h"
 #include "item_models/ParamsItemModel.h"
 
@@ -25,10 +26,14 @@ class Request : public QObject {
 public:
     explicit Request(QObject *parent = nullptr);
     explicit Request(int localId, QObject *parent = nullptr);
+    explicit Request(QString uuid, QObject *parent = nullptr);
 
     static Request *empty(QObject *parent = nullptr);
 
     QByteArray data();
+
+    QString uuid();
+    void setUuid(QString uuid);
 
     int localId() const;
     void setLocalId(int id);
@@ -63,6 +68,7 @@ private:
     QString toUrlencoded(QList<ParamModel *> params);
     QList<ParamModel *> fromUrlencoded(QString urlencoded);
 
+    QString m_uuid;
     int m_localId;
     bool m_edited;
     QString m_url;

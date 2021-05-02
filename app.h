@@ -2,6 +2,7 @@
 #define APP_H
 
 #include <QObject>
+
 #include "Models/request.h"
 #include "Models/requesttreenode.h"
 #include "Models/treemodel.h"
@@ -9,6 +10,7 @@
 #include "utils/HttpClient.h"
 #include "server_api/Authenticator.h"
 #include "db/JsonStorage.h"
+#include "server_api/ServerSyncService.h"
 
 class App : public QObject
 {
@@ -18,6 +20,8 @@ class App : public QObject
     Q_PROPERTY(Authenticator* authenticator READ authenticator CONSTANT)
     Q_PROPERTY(HttpClient *httpClient READ httpClient CONSTANT)
     Q_PROPERTY(JsonStorage *settings READ settings CONSTANT)
+    Q_PROPERTY(ServerSyncService *serverSyncService READ serverSyncService CONSTANT)
+    Q_PROPERTY(bool requestSelected READ requestSelected NOTIFY requestSelectedChanged)
 
 public:
     explicit App(QObject *parent = nullptr);
@@ -32,13 +36,20 @@ public:
 
     JsonStorage *settings() const;
 
+    ServerSyncService *serverSyncService() const;
+
+    bool requestSelected() const;
+
     Q_INVOKABLE void saveCurrentRequest();
+    Q_INVOKABLE bool hasUnsavedRequests();
     Q_INVOKABLE void createRequest(QString name, QString method, QModelIndex index);
     Q_INVOKABLE void createFolder(QString name, QModelIndex index);
     Q_INVOKABLE void renameNode(QString newName, QModelIndex index);
     Q_INVOKABLE void deleteNode(QModelIndex index);
 
 private:
+    bool m_requestSelected;
+    ServerSyncService *m_serverSyncService;
     Authenticator *m_authenticator;
     TreeModel *m_requestTreeModel;
     Request *m_activeRequest;
@@ -50,9 +61,12 @@ private:
 signals:
     void activeRequestChanged(Request *request);
     void requestTreeModelChanged(TreeModel *treeModel);
+    void requestSelectedChanged(bool requestSelected);
 
 public slots:
     Q_INVOKABLE void requestTreeItemActivated(QModelIndex index);
+    Q_INVOKABLE void startSync();
+    void reloadTree();
 };
 
 #endif // APP_H

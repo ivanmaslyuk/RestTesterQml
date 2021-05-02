@@ -123,6 +123,8 @@ TreeView {
 
         property bool _hovered: false
 
+        onVisibleChanged: _hovered = false
+
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.NoButton

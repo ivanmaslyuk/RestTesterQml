@@ -8,7 +8,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        Layout.leftMargin: 16
+        Layout.leftMargin: 16 - 9  // 10px SplitView handle on the left
         Layout.topMargin: 12
         Layout.rightMargin: 16
         Layout.bottomMargin: 12
@@ -44,7 +44,7 @@ ColumnLayout {
 
             TextArea.flickable: TextArea {
                 id: documentationShow
-                leftPadding: 16
+                leftPadding: 16 - 9  // 10px SplitView handle on the left
                 rightPadding: 16
                 wrapMode: TextArea.Wrap
                 selectByMouse: true
@@ -72,7 +72,7 @@ ColumnLayout {
 
             TextArea.flickable: TextArea {
                 id: documentationEdit
-                leftPadding: 16
+                leftPadding: 16 - 9  // 10px SplitView handle on the left
                 rightPadding: 16
                 wrapMode: TextArea.Wrap
                 selectByMouse: true
@@ -91,35 +91,5 @@ ColumnLayout {
             ScrollBar.vertical: ScrollBar {}
         }
 
-//        ScrollView {
-//            leftPadding: 16
-//            rightPadding: leftPadding
-//            bottomPadding: 12
-//            clip: true
-
-//            TextEdit {
-//                text: app.activeRequest.documentation
-//                textFormat: TextEdit.MarkdownText
-//                font.pixelSize: 12
-//                selectByMouse: true
-//                readOnly: true
-//                onLinkActivated: Qt.openUrlExternally(link)
-//            }
-//        }
-
-//        ScrollView {
-//            leftPadding: 16
-//            rightPadding: leftPadding
-//            bottomPadding: 12
-//            clip: true
-
-//            TextEdit {
-//                id: documentationTextEdit
-//                text: app.activeRequest.documentation
-//                textFormat: TextEdit.PlainText
-//                selectByMouse: true
-
-//            }
-//        }
     }
 }

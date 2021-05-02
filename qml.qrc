@@ -21,5 +21,6 @@
         <file>components/Spinner.qml</file>
         <file>components/LoginDialog.qml</file>
         <file>components/SendButton.qml</file>
+        <file>components/RadioToolButton.qml</file>
     </qresource>
 </RCC>

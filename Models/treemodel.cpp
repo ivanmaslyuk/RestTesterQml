@@ -6,8 +6,7 @@
 TreeModel::TreeModel(RequestTreeNode *rootNode, QObject *parent)
     : QAbstractItemModel(parent)
 {
-    m_rootItem = new TreeItem(QVariant::fromValue(rootNode));
-    setupModelData(rootNode, m_rootItem);
+    setRootNode(rootNode);
 }
 
 TreeModel::~TreeModel()
@@ -142,9 +141,11 @@ int TreeModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-void TreeModel::setupModelData(RequestTreeNode *rootNode, TreeItem *parent)
+void TreeModel::setRootNode(RequestTreeNode *rootNode)
 {
-    Q_UNUSED(parent)
+    beginResetModel();
+
+    m_rootItem = new TreeItem(QVariant::fromValue(rootNode));
 
     QList<QPair<QModelIndex, RequestTreeNode *>> nodes;
 
@@ -168,6 +169,8 @@ void TreeModel::setupModelData(RequestTreeNode *rootNode, TreeItem *parent)
         for (int i = 0; i < nodeChildren.length(); ++i)
             nodes.append({index(i, 0, modelIndex), nodeChildren[i]});
     }
+
+    endResetModel();
 }
 
 TreeItem *TreeModel::getItem(const QModelIndex &index) const

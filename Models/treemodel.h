@@ -38,9 +38,10 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     TreeItem *rootItem() const;
+    void setRootNode(RequestTreeNode *rootNode);
+
 
 private:
-    void setupModelData(RequestTreeNode *rootNode, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
 
     TreeItem *m_rootItem;

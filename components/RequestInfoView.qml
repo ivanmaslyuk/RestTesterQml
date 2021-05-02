@@ -48,7 +48,8 @@ ColumnLayout  {
         }
 
         LinkButton {
-            text: documentationShown ? qsTr("Скрыть документацию") : qsTr("Документация")
+            text: documentationShown ? qsTr("Скрыть документацию")
+                                     : qsTr("Документация")
             Layout.alignment: Qt.AlignVCenter
 
             onPressed: {
@@ -191,13 +192,13 @@ ColumnLayout  {
 
         Rectangle { Layout.fillWidth: true }
 
-        LinkButton {
-            text: rootLayout.paramsVisible ? "Скрыть" : "Показать"
-            onPressed: {
-                rootLayout.paramsVisible = !rootLayout.paramsVisible
-            }
-            Layout.rightMargin: 16
-        }
+//        LinkButton {
+//            text: rootLayout.paramsVisible ? "Скрыть" : "Показать"
+//            onPressed: {
+//                rootLayout.paramsVisible = !rootLayout.paramsVisible
+//            }
+//            Layout.rightMargin: 16
+//        }
     }
 
     Rectangle {
@@ -210,7 +211,7 @@ ColumnLayout  {
         currentIndex: tabBar.currentIndex
         Layout.leftMargin: 16
         Layout.rightMargin: 16
-        Layout.bottomMargin: 12
+        Layout.bottomMargin: 12 - 9  // 10 px SplitView handle at the bottom
         Layout.minimumHeight: 63
 
         ParamsTable {

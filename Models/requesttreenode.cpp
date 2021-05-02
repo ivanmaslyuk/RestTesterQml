@@ -1,15 +1,26 @@
 #include "requesttreenode.h"
 
-RequestTreeNode::RequestTreeNode(QObject *parent) : QObject(parent)
+RequestTreeNode::RequestTreeNode(QObject *parent)
+    : QObject(parent)
 {
     m_isFolder = false;
     m_localId = -1;
+    m_uuid = "";
+    m_deleted = false;
+    m_pointer = 1;
+    m_editedAt = QDateTime::currentDateTime();
 }
 
 RequestTreeNode::RequestTreeNode(int localId, QObject *parent)
     : RequestTreeNode(parent)
 {
     m_localId = localId;
+}
+
+RequestTreeNode::RequestTreeNode(QString uuid, QObject *parent)
+    : RequestTreeNode(parent)
+{
+    m_uuid = uuid;
 }
 
 int RequestTreeNode::localId() const
@@ -20,6 +31,16 @@ int RequestTreeNode::localId() const
 void RequestTreeNode::setLocalId(int id)
 {
     m_localId = id;
+}
+
+QString RequestTreeNode::uuid() const
+{
+    return m_uuid;
+}
+
+void RequestTreeNode::setUuid(QString uuid)
+{
+    m_uuid = uuid;
 }
 
 Request *RequestTreeNode::request() const
@@ -52,4 +73,49 @@ bool RequestTreeNode::isFolder() const
 void RequestTreeNode::setIsFolder(bool isFolder)
 {
     m_isFolder = isFolder;
+}
+
+QDateTime RequestTreeNode::editedAt() const
+{
+    return m_editedAt;
+}
+
+void RequestTreeNode::setEditedAt(QDateTime value)
+{
+    m_editedAt = value;
+}
+
+int RequestTreeNode::pointer() const
+{
+    return m_pointer;
+}
+
+void RequestTreeNode::setPointer(int value)
+{
+    m_pointer = value;
+}
+
+bool RequestTreeNode::deleted() const
+{
+    return m_deleted;
+}
+
+void RequestTreeNode::setDeleted(bool deleted)
+{
+    m_deleted = deleted;
+}
+
+QString RequestTreeNode::parentUuid() const
+{
+    return m_parentUuid;
+}
+
+void RequestTreeNode::setParentUuid(QString parentUuid)
+{
+    m_parentUuid = parentUuid;
+}
+
+bool RequestTreeNode::hasParent() const
+{
+    return !m_parentUuid.isEmpty();
 }

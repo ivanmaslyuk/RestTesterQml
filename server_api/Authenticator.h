@@ -17,7 +17,7 @@ public:
 
     bool loggedIn() const;
 
-    void authenticateRequest(QNetworkRequest *request);
+    void authenticateRequest(QNetworkRequest &request);
 
     Q_INVOKABLE void logIn(QString serverUrl, QString username, QString password);
     Q_INVOKABLE void logOut();
@@ -26,7 +26,7 @@ signals:
     void loginStatusChanged(bool loggedIn);
 
 private:
-    void applyBasicAuth(QNetworkRequest *request, QString username, QString password);
+    void applyBasicAuth(QNetworkRequest &request, QString username, QString password);
 
     QNetworkAccessManager *m_networkAccessManager;
     JsonStorage *m_settings;

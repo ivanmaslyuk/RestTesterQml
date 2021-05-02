@@ -4,12 +4,13 @@ Rectangle {
     width: 400
     height: 400
     color: "transparent"
+    clip: true
 
     Rectangle {
         id: notification
         height: 50
         width: 250
-        color: "#555555"
+        color: "#cc0000"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         radius: 4

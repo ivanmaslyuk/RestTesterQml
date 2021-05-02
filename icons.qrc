@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>icons/tree_branch.svg</file>
         <file>icons/send.svg</file>
+        <file>icons/sidebar.svg</file>
     </qresource>
 </RCC>

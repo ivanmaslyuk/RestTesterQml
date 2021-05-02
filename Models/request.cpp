@@ -1,5 +1,6 @@
 #include "request.h"
 #include <QUrl>
+#include "Error.h"
 
 Request::Request(QObject *parent) : QObject(parent)
 {
@@ -7,15 +8,24 @@ Request::Request(QObject *parent) : QObject(parent)
     m_dataParamsModel = new ParamsItemModel(&m_dataParams, false, this);
     m_headersModel = new ParamsItemModel(&m_headers, false, this);
 
-    connect(m_queryParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleQueryParamsChanged);
-    connect(m_dataParamsModel, &ParamsItemModel::dataChanged, this, &Request::handleBodyParamsChanged);
-    connect(m_headersModel, &ParamsItemModel::dataChanged, this, &Request::handleHeadersChanged);
+    connect(m_queryParamsModel, &ParamsItemModel::dataChanged,
+            this, &Request::handleQueryParamsChanged);
+    connect(m_dataParamsModel, &ParamsItemModel::dataChanged,
+            this, &Request::handleBodyParamsChanged);
+    connect(m_headersModel, &ParamsItemModel::dataChanged,
+            this, &Request::handleHeadersChanged);
     m_localId = -1;
+    m_uuid = "";
 }
 
 Request::Request(int localId, QObject *parent) : Request(parent)
 {
     m_localId = localId;
+}
+
+Request::Request(QString uuid, QObject *parent) : Request(parent)
+{
+    m_uuid = uuid;
 }
 
 QByteArray Request::data()
@@ -25,6 +35,16 @@ QByteArray Request::data()
     }
 
     return m_rawData.toUtf8();
+}
+
+QString Request::uuid()
+{
+    return m_uuid;
+}
+
+void Request::setUuid(QString uuid)
+{
+    m_uuid = uuid;
 }
 
 int Request::localId() const

@@ -9,19 +9,21 @@ class SQLiteStorage : public QObject
 {
     Q_OBJECT
 public:
-    explicit SQLiteStorage(QObject *parent = nullptr);
+    explicit SQLiteStorage(QString connectionName, QObject *parent = nullptr);
 
     RequestTreeNode *getRequestTree();
-    void saveNode(RequestTreeNode *node);
-    void createNode(RequestTreeNode *node);
-    void deleteNode(RequestTreeNode *node);
+    void saveNode(RequestTreeNode *node, bool updatedByUser = true);
+    void createNode(RequestTreeNode *node, bool createdByUser = true);
+    int getNodeLocalId(QString uuid);
+    int getRequestLocalId(QString uuid);
+    RequestTreeNode *getNode(QString uuid);
+    QList<RequestTreeNode *> getNodes();
+    void updatePointer(QString nodeUuid, int value);
+    void runMigrations();
 
 private:
-    QList<ParamModel *> paramsFromJson(QString json);
-    QString paramsToJson(QList<ParamModel *> params);
     void handleErrors(QSqlQuery query);
     QString getUuid();
-    void runMigrations();
 
     QSqlDatabase m_db;
 

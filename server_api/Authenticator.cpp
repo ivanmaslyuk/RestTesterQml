@@ -18,7 +18,7 @@ bool Authenticator::loggedIn() const
             && !m_settings->get("password").isNull();
 }
 
-void Authenticator::authenticateRequest(QNetworkRequest *request)
+void Authenticator::authenticateRequest(QNetworkRequest &request)
 {
     QVariant username = m_settings->get("username");
     QVariant password = m_settings->get("password");
@@ -35,7 +35,7 @@ void Authenticator::logIn(QString serverUrl, QString username, QString password)
 {
     QUrl url = QUrl(serverUrl).resolved(QUrl("/auth/check-credentials/"));
     QNetworkRequest request(url);
-    applyBasicAuth(&request, username, password);
+    applyBasicAuth(request, username, password);
 
     QNetworkReply *reply = m_networkAccessManager->get(request);
     reply->setProperty("requestType", "logIn");
@@ -52,10 +52,10 @@ void Authenticator::logOut()
     emit loginStatusChanged(false);
 }
 
-void Authenticator::applyBasicAuth(QNetworkRequest *request, QString username, QString password)
+void Authenticator::applyBasicAuth(QNetworkRequest &request, QString username, QString password)
 {
     QByteArray credentials = (username + ":" + password).toUtf8();
-    request->setRawHeader("Authorization", "Basic " + credentials.toBase64());
+    request.setRawHeader("Authorization", "Basic " + credentials.toBase64());
 }
 
 void Authenticator::requestFinished(QNetworkReply *reply)

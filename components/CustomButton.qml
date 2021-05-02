@@ -24,6 +24,9 @@ Button {
     }
 
     function getTextColor() {
+        if (!control.enabled)
+            return "black"
+
         if (emphasis === "high")
             return "white"
         else if (emphasis === "medium")

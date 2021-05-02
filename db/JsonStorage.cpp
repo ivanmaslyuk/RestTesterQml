@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <functional>
 #include "JsonStorage.h"
-#include "Models/request.h"
 
 JsonStorage::JsonStorage(QString filename, QObject *parent = nullptr)
     : QObject(parent)

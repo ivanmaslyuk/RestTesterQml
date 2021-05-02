@@ -21,6 +21,10 @@ SOURCES += \
         item_models/ParamsItemModel.cpp \
         main.cpp \
         server_api/Authenticator.cpp \
+        server_api/NodeSerializer.cpp \
+        server_api/RequestSerializer.cpp \
+        server_api/ServerApi.cpp \
+        server_api/ServerSyncService.cpp \
         utils/HttpClient.cpp
 
 RESOURCES += qml.qrc \
@@ -53,4 +57,8 @@ HEADERS += \
     db/SQLiteStorage.h \
     item_models/ParamsItemModel.h \
     server_api/Authenticator.h \
+    server_api/NodeSerializer.h \
+    server_api/RequestSerializer.h \
+    server_api/ServerApi.h \
+    server_api/ServerSyncService.h \
     utils/HttpClient.h

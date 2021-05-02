@@ -1,12 +1,16 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.12
+import QtQuick.Dialogs 1.1
 
 
 Rectangle {
+    id: control
     implicitHeight: 40
     implicitWidth: rootLayout.implicitWidth
                    + rootLayout.anchors.leftMargin + rootLayout.anchors.rightMargin
     color: "transparent"
+
+    property bool showTree: true
 
     LoginDialog {
         id: loginDialog
@@ -20,10 +24,51 @@ Rectangle {
         anchors.leftMargin: 16
         anchors.rightMargin: 16
 
-        Text {
-            font.pixelSize: 16
-            text: "Proverb"
-            Layout.alignment: Qt.AlignVCenter
+        RadioToolButton {
+            id: showTreeButton
+            text: qsTr("Список")
+            on: showTree
+
+            Binding {
+                target: control
+                property: "showTree"
+                value: showTreeButton.on
+            }
+        }
+
+        MessageDialog {
+            id: syncUnsavedRequestsDialog
+            title: qsTr("Синхронизация")
+            icon: StandardIcon.Question
+            text: qsTr("При синхронизации будут утеряны изменения в редактируемых запросах. Продолжить?")
+            standardButtons: StandardButton.Yes | StandardButton.No
+            onYes: {
+                syncButton.enabled = false
+                app.startSync()
+            }
+        }
+
+        CustomButton {
+            id: syncButton
+            text: "Синхронизация"
+            onClicked: {
+                if (app.hasUnsavedRequests()) {
+                    syncUnsavedRequestsDialog.open()
+                } else {
+                    syncButton.enabled = false
+                    app.startSync()
+                }
+            }
+
+            Connections {
+                target: app.serverSyncService
+                function onSyncError(errorMessage) {
+                    syncButton.enabled = true
+                }
+                function onSyncFinished() {
+                    syncButton.enabled = true
+                }
+            }
         }
 
         Rectangle {
