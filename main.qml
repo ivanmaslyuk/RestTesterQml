@@ -70,4 +70,20 @@ Window {
             }
         }
     }
+
+
+    Notification {
+        id: notificationPresenter
+
+        Connections {
+            target: app.serverSyncService
+            function onSyncError(err) {
+                notificationPresenter.showNotification(err)
+            }
+            function onSyncFinished() {
+                notificationPresenter.showNotification(qsTr('Синхронизация завершена'))
+            }
+        }
+    }
+
 }
