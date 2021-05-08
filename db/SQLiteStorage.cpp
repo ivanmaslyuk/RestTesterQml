@@ -295,6 +295,7 @@ RequestTreeNode *SQLiteStorage::getNode(QString uuid)
         request->setName(requestQuery.value("name").toString());
         request->setContentType(requestQuery.value("content_type").toString());
         request->setDocumentation(requestQuery.value("documentation").toString());
+        request->setTests(requestQuery.value("tests").toString());
         request->setEdited(false);
 
         node->setRequest(request);

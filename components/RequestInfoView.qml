@@ -308,7 +308,7 @@ ColumnLayout  {
                 id: testsInput
                 wrapMode: TextArea.Wrap
                 selectByMouse: true
-                placeholderText: qsTr("test('exmaple test', function (request, response) {\n    assert(true)\n})")
+                placeholderText: qsTr("test('example test', function (request, response) {\n    assert(response.status === 200)\n})")
                 text: request.tests
                 font.pixelSize: 12
                 font.family: "Consolas"
