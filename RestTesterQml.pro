@@ -26,10 +26,12 @@ SOURCES += \
         server_api/RequestSerializer.cpp \
         server_api/ServerApi.cpp \
         server_api/ServerSyncService.cpp \
-        utils/HttpClient.cpp
+        utils/HttpClient.cpp \
+        testing/TestRunner.cpp
 
 RESOURCES += qml.qrc \
-    icons.qrc
+    icons.qrc \
+    js.qrc
 
 TRANSLATIONS += \
     RestTesterQml_en_US.ts
@@ -63,4 +65,6 @@ HEADERS += \
     server_api/RequestSerializer.h \
     server_api/ServerApi.h \
     server_api/ServerSyncService.h \
-    utils/HttpClient.h
+    utils/HttpClient.h \
+    testing/TestRunner.h
+

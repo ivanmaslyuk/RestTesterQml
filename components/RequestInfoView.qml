@@ -62,6 +62,7 @@ ColumnLayout  {
     }
 
     RowLayout {
+        id: urlFieldArea
         spacing: 12
         Layout.preferredHeight: 40
         Layout.maximumHeight: 40
@@ -295,6 +296,40 @@ ColumnLayout  {
         ParamsTable {
             id: headersTable
             model: request.headersModel
+        }
+
+        Flickable {
+            id: testsArea
+            boundsBehavior: Flickable.StopAtBounds
+            maximumFlickVelocity: 500
+            clip: true
+
+            TextArea.flickable: TextArea {
+                id: testsInput
+                wrapMode: TextArea.Wrap
+                selectByMouse: true
+                placeholderText: qsTr("test('exmaple test', function (request, response) {\n    assert(true)\n})")
+                text: request.tests
+                font.pixelSize: 12
+                font.family: "Consolas"
+                color: theme.textColor
+                background: Rectangle {
+                    color: "transparent"
+                    border.color: theme.lineColor
+                    border.width: 1
+                    radius: 4
+                }
+
+                Binding {
+                    target: request
+                    property: "tests"
+                    value: testsInput.text
+                    when: !updatingRequest
+                    restoreMode: Binding.RestoreBinding
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar { }
         }
     }
 

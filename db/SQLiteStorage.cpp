@@ -88,6 +88,7 @@ RequestTreeNode *SQLiteStorage::getRequestTree()
         request->setName(requestQuery.value("name").toString());
         request->setContentType(requestQuery.value("content_type").toString());
         request->setDocumentation(requestQuery.value("documentation").toString());
+        request->setTests(requestQuery.value("tests").toString());
         request->setEdited(false);
 
         node->setRequest(request);
@@ -156,7 +157,7 @@ void SQLiteStorage::saveNode(RequestTreeNode *node, bool updatedByUser)
         requestQuery.prepare("UPDATE request SET name = :name, url = :url, raw_data = :raw_data, "
                           "method = :method, content_type = :content_type, documentation = :documentation, "
                           "query_params_json = :query_params_json, data_params_json = :data_params_json, "
-                          "headers_json = :headers_json WHERE id = :id;");
+                          "headers_json = :headers_json, tests = :tests WHERE id = :id;");
         requestQuery.bindValue(":id", node->request()->localId());
         requestQuery.bindValue(":name", node->request()->name());
         requestQuery.bindValue(":url", node->request()->url());
@@ -167,6 +168,7 @@ void SQLiteStorage::saveNode(RequestTreeNode *node, bool updatedByUser)
         requestQuery.bindValue(":query_params_json", ParamModel::listToJson(node->request()->queryParams()));
         requestQuery.bindValue(":data_params_json", ParamModel::listToJson(node->request()->dataParams()));
         requestQuery.bindValue(":headers_json", ParamModel::listToJson(node->request()->headers()));
+        requestQuery.bindValue(":tests", node->request()->tests());
         requestQuery.exec();
         handleErrors(requestQuery);
     }
@@ -400,7 +402,8 @@ void SQLiteStorage::runMigrations()
         "    documentation     text,"
         "    query_params_json text,"
         "    data_params_json  text,"
-        "    headers_json      text"
+        "    headers_json      text,"
+        "    tests             text"
         ");";
     QSqlQuery(createRequestTable, m_db).exec();
 }

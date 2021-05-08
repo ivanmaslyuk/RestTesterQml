@@ -253,6 +253,21 @@ void Request::setEdited(bool edited)
     emit editedChanged(edited);
 }
 
+QString Request::tests() const
+{
+    return m_tests;
+}
+
+void Request::setTests(QString value)
+{
+    if (value == m_tests)
+        return;
+
+    m_tests = value;
+    emit testsChanged(value);
+    setEdited(true);
+}
+
 void Request::handleQueryParamsChanged()
 {
     // Update query in url

@@ -21,6 +21,7 @@ QJsonObject RequestSerializer::toJson(Request *request)
     json["raw_data"] = request->rawData();
     json["content_type"] = request->contentType();
     json["documentation"] = request->documentation();
+    json["tests"] = request->tests();
     return json;
 }
 
@@ -38,6 +39,7 @@ Request *RequestSerializer::fromJson(QJsonObject json, QObject *node)
     request->setRawData(json["raw_data"].toString());
     request->setContentType(json["content_type"].toString());
     request->setDocumentation(json["documentation"].toString());
+    request->setTests(json["tests"].toString());
     request->setEdited(false);
     return request;
 }

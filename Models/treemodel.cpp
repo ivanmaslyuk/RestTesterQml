@@ -161,11 +161,6 @@ void TreeModel::setRootNode(RequestTreeNode *rootNode)
 
     QList<QPair<QModelIndex, RequestTreeNode *>> nodes;
 
-    // Add root's children to nodes
-    QList<RequestTreeNode *> rootChildren = rootNode->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
-    for (auto r : rootChildren)
-        qDebug() << "r" << r->isFolder() << r->folderName();
-
     auto sortFunc = [](RequestTreeNode *node1, RequestTreeNode *node2) {
         if (node1->isFolder() && !node2->isFolder())
             return true;
@@ -177,6 +172,9 @@ void TreeModel::setRootNode(RequestTreeNode *rootNode)
             return node1->request()->name().toLower() < node2->request()->name().toLower();
         throw Error("Sort function not full!");
     };
+
+    // Add root's children to nodes
+    QList<RequestTreeNode *> rootChildren = rootNode->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
 
     std::sort(rootChildren.begin(), rootChildren.end(), sortFunc);
     insertRows(0, rootChildren.length());

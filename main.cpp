@@ -5,6 +5,7 @@
 #include "app.h"
 #include "Models/treemodel.h"
 #include "Theme.h"
+#include "testing/TestRunner.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +29,9 @@ int main(int argc, char *argv[])
 
     Theme theme;
     engine.rootContext()->setContextProperty("theme", &theme);
+
+    TestRunner testRunner;
+    engine.rootContext()->setContextProperty("testRunner", &testRunner);
 
     engine.load(url);
 

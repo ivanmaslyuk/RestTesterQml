@@ -17,6 +17,7 @@ class Request : public QObject {
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
     Q_PROPERTY(QString documentation READ documentation WRITE setDocumentation NOTIFY documentationChanged)
+    Q_PROPERTY(QString tests READ tests WRITE setTests NOTIFY testsChanged)
 
     // Item Model Fields
     Q_PROPERTY(ParamsItemModel* queryParamsModel READ queryParamsModel CONSTANT)
@@ -40,6 +41,9 @@ public:
 
     bool edited() const;
     void setEdited(bool edited);
+
+    QString tests() const;
+    void setTests(QString value);
 
     QString url() const;
     QList<ParamModel *> queryParams() const;
@@ -80,6 +84,7 @@ private:
     QString m_name;
     QString m_contentType;
     QString m_documentation;
+    QString m_tests;
 
     ParamsItemModel *m_queryParamsModel;
     ParamsItemModel *m_dataParamsModel;
@@ -97,7 +102,8 @@ signals:
     void nameChanged(QString name);
     void contentTypeChanged(QString contentType);
     void documentationChanged(QString documentation);
-    bool editedChanged(bool edited);
+    void editedChanged(bool edited);
+    void testsChanged(QString value);
 
     void noSignal(QString);
 };
