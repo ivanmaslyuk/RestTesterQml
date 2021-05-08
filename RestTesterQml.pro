@@ -15,6 +15,7 @@ SOURCES += \
         Models/requesttreenode.cpp \
         Models/treeitem.cpp \
         Models/treemodel.cpp \
+        Theme.cpp \
         app.cpp \
         db/JsonStorage.cpp \
         db/SQLiteStorage.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     Models/requesttreenode.h \
     Models/treeitem.h \
     Models/treemodel.h \
+    Theme.h \
     app.h \
     db/JsonStorage.h \
     db/SQLiteStorage.h \

@@ -7,7 +7,7 @@ Rectangle {
     id: control
     width: 30
     height: width
-    color: "#EEEEEE"
+    color: theme.secondaryBackground
     radius: width / 2
 
     layer.enabled: true
@@ -38,7 +38,7 @@ Rectangle {
                 context.closePath();
 
                 // the fill color
-                context.fillStyle = "#2962FF";
+                context.fillStyle = theme.accentColor;
                 context.fill();
             }
         }
@@ -46,7 +46,7 @@ Rectangle {
 
     Rectangle {
         id: innerCircle
-        color: "white"
+        color: theme.primaryBackground
         height: parent.height / 2
         width: parent.width / 2
         radius: parent.width / 2

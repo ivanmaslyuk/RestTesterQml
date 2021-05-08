@@ -15,6 +15,7 @@ ColumnLayout {
 
         Text {
             text: qsTr("Документация")
+            color: theme.textColor
             Layout.alignment: Qt.AlignVCenter
         }
 
@@ -25,6 +26,7 @@ ColumnLayout {
         LinkButton {
             text: isEditing ? qsTr("Готово") : qsTr("Изменить")
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+            color: theme.textColor
 
             onClicked: {
                 if (isEditing) {
@@ -49,6 +51,7 @@ ColumnLayout {
                 wrapMode: TextArea.Wrap
                 selectByMouse: true
                 placeholderText: qsTr("Нет документации")
+                color: theme.textColor
                 font.pixelSize: 12
                 readOnly: true
                 textFormat: TextArea.MarkdownText

@@ -14,6 +14,20 @@ Window {
     minimumWidth: 700
     visible: true
     title: "REST Tester"
+    color: theme.primaryBackground
+
+    Component.onCompleted: {
+        theme.primaryBackground = "#121212"
+        theme.secondaryBackground = "#181818"
+        theme.accentColor = "orange"
+        theme.textColor = "white"
+        theme.lineColor = "#282828"
+        theme.switchTabBarBg = "#282828"
+        theme.treeViewHighlight = "#282828"
+        theme.secondaryTextColor = "#808080"
+        theme.toolButtonBg = "#333"
+        theme.toolButtonFg = "white"
+    }
 
     Connections {
         target: requestView
@@ -45,14 +59,15 @@ Window {
             Layout.fillWidth: true
 
             handle: Rectangle {
+                id: splitViewHandle
                 implicitWidth: 10
-                color: "#F9F9F9"
+                color: theme.secondaryBackground
 
                 Rectangle {
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right
-                    color: "#EEEEEE"
+                    color: theme.lineColor
                     width: 1
                 }
             }

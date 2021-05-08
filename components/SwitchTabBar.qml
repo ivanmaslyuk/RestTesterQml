@@ -5,7 +5,7 @@ import QtQuick.Controls 2.15
 Rectangle {
     width: tabBar.width + 4
     height: tabBar.height + 4
-    color: "#EEEEEE"
+    color: theme.switchTabBarBg
     radius: 4
 
     required property var tabsModel
@@ -22,7 +22,7 @@ Rectangle {
         anchors.leftMargin: 2
 
         background: Rectangle {
-            color: "#EEEEEE"
+            color: "transparent"
         }
 
         Repeater {
@@ -35,7 +35,7 @@ Rectangle {
                 width: contentItem.implicitWidth + 16
 
                 background: Rectangle {
-                    color: (tabButton == tabBar.currentItem) ? "white" : "#EEEEEE"
+                    color: (tabButton == tabBar.currentItem) ? theme.primaryBackground : "transparent"
                     radius: 4
                 }
 
@@ -43,6 +43,7 @@ Rectangle {
                     font.pixelSize: 14
                     font.family: "Roboto"
                     text: parent.text
+                    color: theme.textColor
 
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -51,9 +52,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onPressed: {
-                        mouse.accepted = false
-                    }
+                    onPressed: mouse.accepted = false
                 }
             }
         }

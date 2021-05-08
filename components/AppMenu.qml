@@ -84,6 +84,7 @@ Rectangle {
                 id: usernameText
                 font.pixelSize: 12
                 text: app.settings.get('username')
+                color: theme.textColor
 
                 Connections {
                     target: app.authenticator
@@ -96,11 +97,12 @@ Rectangle {
             Text {
                 font.pixelSize: 12
                 text: " - "
+                color: theme.textColor
             }
 
             LinkButton {
                 font.pixelSize: 12
-                color: "#777777"
+                color: theme.secondaryTextColor
                 text: qsTr("Выйти")
                 onClicked: app.authenticator.logOut()
             }
@@ -109,7 +111,7 @@ Rectangle {
         LinkButton {
             visible: !app.authenticator.loggedIn
             font.pixelSize: 12
-            color: "#777777"
+            color: theme.secondaryTextColor
             text: qsTr("Войти")
             onClicked: loginDialog.open()
         }
@@ -117,7 +119,7 @@ Rectangle {
 
     Rectangle {
         implicitHeight: 1
-        color: "#EEEEEE"
+        color: theme.lineColor
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

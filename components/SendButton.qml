@@ -1,11 +1,13 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.15
 
 Rectangle {
     id: control
     width: 52
     height: 40
     radius: 4
-    border.color: "#48B146"
+    border.color: theme.accentColor
+    color: "transparent"
 
     property bool hovered: false
 
@@ -24,16 +26,25 @@ Rectangle {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: "#48B146"
+        color: theme.accentColor
         radius: 4
         opacity: 0.3
     }
 
     Image {
+        id: sendIcon
+        visible: false
         width: 24
         height: 24
         source: "/icons/send.svg"
         anchors.centerIn: parent
+    }
+
+    ColorOverlay {
+        anchors.fill: sendIcon
+        source: sendIcon
+        color: theme.accentColor
+        transform:rotation
     }
 
     MouseArea {

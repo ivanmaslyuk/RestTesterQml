@@ -29,6 +29,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+    bool hasChildren(const QModelIndex &parent) const override;
     bool setData(const QModelIndex &index, const QVariant &value,
                      int role = Qt::EditRole) override;
     bool insertRows(int position, int rows,
@@ -45,6 +46,7 @@ private:
     TreeItem *getItem(const QModelIndex &index) const;
 
     TreeItem *m_rootItem;
+
 };
 
 #endif // TREEMODEL_H

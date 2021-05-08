@@ -22,9 +22,9 @@ ColumnLayout {
             anchors.leftMargin: 16
             anchors.rightMargin: 16
 
-
             Text {
                 text: qsTr("Ответ")
+                color: theme.textColor
                 font.pixelSize: 16
             }
 
@@ -74,12 +74,15 @@ ColumnLayout {
                 font.family: "Consolas"
                 font.pixelSize: 12
                 selectByMouse: true
+                color: theme.textColor
                 readOnly: true
                 textMargin: 4
             }
         }
 
         Rectangle {
+            color: "transparent"
+
             ParamsTable {
                 id: headersTable
                 readOnly: true

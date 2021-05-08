@@ -3,6 +3,7 @@ import QtQuick.Controls 1.6
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.12
 import QtQml.Models 2.15
+import QtGraphicalEffects 1.15
 
 TreeView {
     id: control
@@ -10,17 +11,24 @@ TreeView {
     model: app.requestTreeModel
     frameVisible: false
 
+    Image {
+        id: branchIcon
+        visible: false
+        source: "/icons/tree_branch.svg"
+    }
+
     style: TreeViewStyle {
         transientScrollBars: true
-        backgroundColor: "#f9f9f9"
+        backgroundColor: theme.secondaryBackground
         indentation: 0
 
-        branchDelegate: Image {
+        branchDelegate: ColorOverlay {
             width: 8
             height: 8
             x: 16 + 12 * styleData.depth + width
             rotation: styleData.isExpanded ? 90 : 0
-            source: "/icons/tree_branch.svg"
+            source: branchIcon
+            color: theme.textColor
         }
     }
 
@@ -102,6 +110,7 @@ TreeView {
             Text {
                 id: nameText
                 font.pixelSize: 14
+                color: theme.textColor
                 text: styleData.value
                 Layout.fillWidth: true
             }
@@ -118,7 +127,7 @@ TreeView {
 
     rowDelegate: Rectangle {
         id: rowDelegate
-        color: (styleData.selected | _hovered) ? "#F0F0F0" : "transparent"
+        color: (styleData.selected | _hovered) ? theme.treeViewHighlight : "transparent"
         height: itemHeight
 
         property bool _hovered: false

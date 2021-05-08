@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include "app.h"
 #include "Models/treemodel.h"
+#include "Theme.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +25,9 @@ int main(int argc, char *argv[])
 
     App appObject;
     engine.rootContext()->setContextProperty("app", &appObject);
+
+    Theme theme;
+    engine.rootContext()->setContextProperty("theme", &theme);
 
     engine.load(url);
 

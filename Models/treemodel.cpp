@@ -2,6 +2,7 @@
 #include <QVariant>
 #include <QDebug>
 #include <QPair>
+#include "Error.h"
 
 TreeModel::TreeModel(RequestTreeNode *rootNode, QObject *parent)
     : QAbstractItemModel(parent)
@@ -40,6 +41,17 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
         return Qt::NoItemFlags;
 
     return QAbstractItemModel::flags(index);
+}
+
+bool TreeModel::hasChildren(const QModelIndex &parent) const
+{
+    if (!parent.isValid())
+        return false;
+
+    TreeItem *item = static_cast<TreeItem *>(parent.internalPointer());
+    RequestTreeNode *node = item->data().value<RequestTreeNode *>();
+
+    return node->isFolder();
 }
 
 bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -151,6 +163,22 @@ void TreeModel::setRootNode(RequestTreeNode *rootNode)
 
     // Add root's children to nodes
     QList<RequestTreeNode *> rootChildren = rootNode->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
+    for (auto r : rootChildren)
+        qDebug() << "r" << r->isFolder() << r->folderName();
+
+    auto sortFunc = [](RequestTreeNode *node1, RequestTreeNode *node2) {
+        if (node1->isFolder() && !node2->isFolder())
+            return true;
+        if (!node1->isFolder() && node2->isFolder())
+            return false;
+        if (node1->isFolder() && node2->isFolder())
+            return node1->folderName().toLower() < node2->folderName().toLower();
+        if (!node1->isFolder() && !node2->isFolder())
+            return node1->request()->name().toLower() < node2->request()->name().toLower();
+        throw Error("Sort function not full!");
+    };
+
+    std::sort(rootChildren.begin(), rootChildren.end(), sortFunc);
     insertRows(0, rootChildren.length());
     for (int i = 0; i < rootChildren.length(); ++i)
         nodes.append({index(i, 0), rootChildren[i]});
@@ -165,6 +193,7 @@ void TreeModel::setRootNode(RequestTreeNode *rootNode)
 
         // Add children of current item next
         QList<RequestTreeNode *> nodeChildren = node->findChildren<RequestTreeNode *>("", Qt::FindDirectChildrenOnly);
+        std::sort(nodeChildren.begin(), nodeChildren.end(), sortFunc);
         insertRows(0, nodeChildren.length(), modelIndex);
         for (int i = 0; i < nodeChildren.length(); ++i)
             nodes.append({index(i, 0, modelIndex), nodeChildren[i]});

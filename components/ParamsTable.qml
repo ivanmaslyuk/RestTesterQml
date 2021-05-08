@@ -31,7 +31,7 @@ Rectangle {
 
     Rectangle {
         anchors.fill: parent
-        border.color: "#EEEEEE"
+        border.color: theme.lineColor
         border.width: 1
         radius: 4
         color: "transparent"
@@ -55,7 +55,7 @@ Rectangle {
         Rectangle {
             id: control
             color: "transparent"
-            border.color: fullTableVisible() ? "#EEEEEE" : "transparent"
+            border.color: fullTableVisible() ? theme.lineColor : "transparent"
             border.width: 1
             radius: 4
             anchors.fill: parent
@@ -83,7 +83,7 @@ Rectangle {
                             Rectangle {
                                 implicitHeight: index == 0 ? 0 : 1
                                 implicitWidth: 36
-                                color: "#EEEEEE"
+                                color: theme.lineColor
                             }
 
                             CheckDelegate {
@@ -97,7 +97,7 @@ Rectangle {
                                 indicator: Rectangle {
                                     implicitHeight: 12
                                     implicitWidth: 12
-                                    color: "#F7F7F7"
+                                    color: "transparent"
                                     anchors.centerIn: parent
                                     radius: 2
                                     border.width: 1
@@ -117,13 +117,9 @@ Rectangle {
 
                                     MouseArea {
                                         anchors.fill: parent
-
-                                        onPressed: {
-                                            paramCheckBox.indicator.color = "#F0F0F0"
-                                        }
+                                        cursorShape: Qt.PointingHandCursor
 
                                         onReleased: {
-                                            paramCheckBox.indicator.color = "#F7F7F7"
                                             paramCheckBox.checked = !paramCheckBox.checked
                                         }
                                     }
@@ -145,7 +141,7 @@ Rectangle {
                     visible: showCheckBox
                     implicitWidth: 1
                     Layout.fillHeight: true
-                    color: "#EEEEEE"
+                    color: theme.lineColor
                 }
 
                 SplitView {
@@ -175,13 +171,13 @@ Rectangle {
                                     Rectangle {
                                         implicitWidth: separator.implicitWidth
                                         implicitHeight: index == 0 ? 0 : 1
-                                        color: "#EEEEEE"
+                                        color: theme.lineColor
                                     }
 
                                     Rectangle {
                                         implicitWidth: 1
                                         implicitHeight: rowHeight
-                                        color: "#EEEEEE"
+                                        color: theme.lineColor
                                         Layout.alignment: Qt.AlignHCenter
                                     }
                                 }
@@ -208,7 +204,7 @@ Rectangle {
                                     Rectangle {
                                         implicitHeight: index == 0 ? 0 : 1
                                         Layout.fillWidth: true
-                                        color: "#EEEEEE"
+                                        color: theme.lineColor
                                     }
 
                                     TextField {
@@ -222,6 +218,7 @@ Rectangle {
                                         font.pixelSize: 12
                                         readOnly: rootRect.readOnly
                                         placeholderText: "Key"
+                                        color: theme.textColor
 
                                         background: Rectangle {
                                             color: "transparent"
@@ -259,7 +256,7 @@ Rectangle {
                                     Rectangle {
                                         implicitHeight: index == 0 ? 0 : 1
                                         Layout.fillWidth: true
-                                        color: "#EEEEEE"
+                                        color: theme.lineColor
                                     }
 
                                     TextField {
@@ -273,6 +270,7 @@ Rectangle {
                                         font.pixelSize: 12
                                         readOnly: rootRect.readOnly
                                         placeholderText: "Value"
+                                        color: theme.textColor
 
                                         background: Rectangle {
                                             color: "transparent"

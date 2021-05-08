@@ -15,12 +15,22 @@ ComboBox {
         rightPadding: 8
         highlighted: control.highlightedIndex === index
 
+        background: Rectangle {
+            color: parent.highlighted ? theme.secondaryBackground : theme.primaryBackground
+        }
+
         contentItem: Text {
             text: modelData.text
-            color: "#555555"
+            color: theme.secondaryTextColor
             font: control.font
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onPressed: mouse.accepted = false
         }
     }
 
@@ -39,6 +49,7 @@ ComboBox {
             currentIndex: control.highlightedIndex
 
             delegate: Rectangle {
+                color: "transparent"
                 Text {
                     text: model.text
                 }
@@ -48,8 +59,9 @@ ComboBox {
         }
 
         background: Rectangle {
-            border.color: "#EEEEEE"
+            border.color: theme.lineColor
             radius: 4
+            color: theme.primaryBackground
         }
     }
 
@@ -60,7 +72,7 @@ ComboBox {
 
         verticalAlignment: Text.AlignVCenter
         font: control.font
-        color: "#555555"
+        color: theme.secondaryTextColor
         anchors.verticalCenter: parent.verticalCenter
 
         MouseArea {
@@ -100,8 +112,9 @@ ComboBox {
                        + 6 // indicator spacing
                        + sidePadding * 2
         height: parent.implicitHeight
-        border.color: "#EEEEEE"
+        border.color: theme.lineColor
         border.width: 1
         radius: 4
+        color: "transparent"
     }
 }

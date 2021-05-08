@@ -6,14 +6,17 @@ import QtQml.Models 2.15
 import "."
 
 Rectangle {
+    color: theme.primaryBackground
 
     Rectangle {
         id: noRequestSelectedView
         visible: !app.requestSelected
         anchors.fill: parent
+        color: "transparent"
 
         Text {
             anchors.centerIn: parent
+            color: theme.textColor
             text: qsTr("Выберитре запрос из списка слева.")
         }
     }
@@ -32,7 +35,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 width: 1
-                color: "#EEEEEE"
+                color: theme.lineColor
             }
         }
 
@@ -51,7 +54,7 @@ Rectangle {
 
                 Rectangle {
                     height: 1
-                    color: "#EEEEEE"
+                    color: theme.lineColor
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom

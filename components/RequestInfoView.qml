@@ -35,6 +35,7 @@ ColumnLayout  {
 
         Text {
             id: requestName
+            color: theme.textColor
             text: request.edited ? request.name + " *" : request.name
             font.pixelSize: 16
         }
@@ -44,6 +45,7 @@ ColumnLayout  {
         LinkButton {
             visible: request.edited
             text: qsTr("Сохранить")
+            color: theme.textColor
             onClicked: app.saveCurrentRequest()
         }
 
@@ -51,6 +53,7 @@ ColumnLayout  {
             text: documentationShown ? qsTr("Скрыть документацию")
                                      : qsTr("Документация")
             Layout.alignment: Qt.AlignVCenter
+            color: theme.textColor
 
             onPressed: {
                 documentationShown = !documentationShown
@@ -68,7 +71,7 @@ ColumnLayout  {
 
         Rectangle {
             id: inputGroup
-            border.color: "#EEEEEE"
+            border.color: theme.lineColor
             border.width: 1
             radius: 4
             Layout.fillWidth: true
@@ -116,7 +119,7 @@ ColumnLayout  {
                 Rectangle {
                     width: 1
                     height: 24
-                    color: "#EEEEEE"
+                    color: theme.lineColor
 
                     Layout.bottomMargin: 8
                     Layout.topMargin: 8
@@ -133,6 +136,7 @@ ColumnLayout  {
                     leftPadding: 0
                     rightPadding: 0
                     text: request.url
+                    color: theme.textColor
 
                     background: Rectangle { color: "transparent" }
 
@@ -234,12 +238,15 @@ ColumnLayout  {
             }
 
             Rectangle {
+                color: "transparent"
+
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
                     horizontalAlignment: Qt.AlignHCenter
                     font.pixelSize: 14
+                    color: theme.textColor
                     text: qsTr("У этого запроса нет тела")
                 }
             }
@@ -264,8 +271,10 @@ ColumnLayout  {
                     text: request.rawData
                     font.pixelSize: 12
                     font.family: "Consolas"
+                    color: theme.textColor
                     background: Rectangle {
-                        border.color: "#EEEEEE"
+                        color: "transparent"
+                        border.color: theme.lineColor
                         border.width: 1
                         radius: 4
                     }

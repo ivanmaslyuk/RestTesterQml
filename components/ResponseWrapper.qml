@@ -23,15 +23,18 @@ StackLayout {
 
     Rectangle {
         id: noResponseView
+        color: theme.primaryBackground
 
         Text {
             text: "Нажмите «Отправить», чтобы получить ответ"
             anchors.centerIn: parent
+            color: theme.textColor
         }
     }
 
     Rectangle {
         id: loadingView
+        color: theme.primaryBackground
 
         ColumnLayout {
             anchors.centerIn: parent
@@ -47,6 +50,7 @@ StackLayout {
 
                 Text {
                     text: qsTr("Отправка запроса")
+                    color: theme.textColor
                     font.pixelSize: 16
                 }
             }

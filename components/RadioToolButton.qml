@@ -1,11 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.12
+import QtGraphicalEffects 1.15
 
 Rectangle {
     id: control
     radius: 4
     height: 26
-    color: on ? "#EEEEEE" : "transparent"
+    color: on ? theme.toolButtonBg : "transparent"
     width: content.implicitWidth + 16
 
     property bool hovered: false
@@ -26,17 +27,25 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 8
         anchors.rightMargin: 8
-        spacing: 4
+        spacing: 8
 
         Image {
+            id: icon
+            visible: false
             source: "/icons/sidebar.svg"
+        }
+
+        ColorOverlay {
+            height: icon.height
+            width: icon.width
+            source: icon
+            color: theme.toolButtonFg
         }
 
         Text {
             text: control.text
             font.pixelSize: 12
-            color: "#333333"
-            Layout.topMargin: -1
+            color: theme.toolButtonFg
         }
     }
 }
