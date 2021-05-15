@@ -22,5 +22,6 @@
         <file>components/LoginDialog.qml</file>
         <file>components/SendButton.qml</file>
         <file>components/RadioToolButton.qml</file>
+        <file>MainItem.qml</file>
     </qresource>
 </RCC>

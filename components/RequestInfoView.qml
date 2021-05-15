@@ -36,8 +36,16 @@ ColumnLayout  {
         Text {
             id: requestName
             color: theme.textColor
-            text: request.edited ? request.name + " *" : request.name
+            text: request.name
             font.pixelSize: 16
+        }
+
+        Rectangle {
+            height: 6
+            width: 6
+            color: theme.accentColor
+            radius: 3
+            visible: request.edited
         }
 
         Rectangle { Layout.fillWidth: true }
@@ -74,6 +82,7 @@ ColumnLayout  {
             id: inputGroup
             border.color: theme.lineColor
             border.width: 1
+            border.pixelAligned: true
             radius: 4
             Layout.fillWidth: true
             Layout.fillHeight: true

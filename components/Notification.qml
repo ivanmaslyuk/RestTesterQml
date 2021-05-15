@@ -42,7 +42,8 @@ Rectangle {
                     clip: true
                     color: "#cc0000"
                     radius: 4
-                    anchors.fill: parent
+                    height: parent.height
+                    width: parent.width
 
                     Text {
                         id: notificationText
@@ -101,6 +102,14 @@ Rectangle {
                                 onClicked: listView.model.remove(parseInt(model.index))
                             }
                         }
+                    }
+
+                    NumberAnimation on y {
+                        from: 100
+                        to: 0
+                        duration: 100
+                        easing.type: Easing.InOutBack
+
                     }
                 }
 

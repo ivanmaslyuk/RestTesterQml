@@ -114,7 +114,7 @@ ColumnLayout {
                     model: ListModel { id: testResultsModel }
 
                     Rectangle {
-                        height: 50
+                        height: 30
                         width: testResultsList.width
                         color: hovered ? theme.treeViewHighlight : "transparent"
 
@@ -128,7 +128,7 @@ ColumnLayout {
                             Text {
                                 color: theme.textColor
                                 text: model.testName
-                                font.pixelSize: 16
+                                font.pixelSize: 14
                             }
 
                             Rectangle { Layout.fillWidth: true }
@@ -136,7 +136,7 @@ ColumnLayout {
                             Text {
                                 text: model.succeeded ? "Пройден" : "Провален"
                                 color: model.succeeded ? "green" : "red"
-                                font.pixelSize: 16
+                                font.pixelSize: 14
                             }
                         }
 

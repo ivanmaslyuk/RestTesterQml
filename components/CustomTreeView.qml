@@ -11,6 +11,18 @@ TreeView {
     model: app.requestTreeModel
     frameVisible: false
 
+    Connections {
+        target: control
+        function onClicked(index) {
+            app.requestTreeItemActivated(index)
+
+            if (control.isExpanded(index))
+                control.collapse(index)
+            else
+                control.expand(index)
+        }
+    }
+
     Image {
         id: branchIcon
         visible: false
@@ -142,10 +154,6 @@ TreeView {
             onEntered: rowDelegate._hovered = true
             onExited: rowDelegate._hovered = false
         }
-    }
-
-    onActivated: {
-        app.requestTreeItemActivated(index)
     }
 
     MouseArea {
