@@ -7,6 +7,7 @@ import QtGraphicalEffects 1.15
 import "components"
 
 Rectangle {
+    id: control
     anchors.fill: parent
     color: theme.primaryBackground
 
@@ -26,7 +27,7 @@ Rectangle {
     Connections {
         target: requestView
         function onNeedMoreSpace(addWidth) {
-            window.width += addWidth
+            control.width += addWidth
         }
     }
 
@@ -71,7 +72,7 @@ Rectangle {
                 clip: true
                 visible: menu.showTree
                 SplitView.minimumWidth: 100
-                SplitView.maximumWidth: window.width / 3
+                SplitView.maximumWidth: control.width / 3
             }
 
             RequestView {
@@ -79,7 +80,6 @@ Rectangle {
             }
         }
     }
-
 
     Notification {
         id: notificationPresenter

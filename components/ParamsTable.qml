@@ -12,6 +12,10 @@ Rectangle {
     property bool appendEmptyRow: true
     property var model: null
 
+    property int _hoveredRowIndex: -1
+
+    signal rowDeleted()
+
     function modelRowCount() {
         if (!model) return 0
         return model.rowCount()
@@ -70,6 +74,15 @@ Rectangle {
                 anchors.margins: 1
 
                 ColumnLayout {
+                    id: heightHack  // bad code
+                    spacing: 1
+                    Repeater {
+                        model: rootRect.model
+                        Rectangle { implicitHeight: 30 }
+                    }
+                }
+
+                ColumnLayout {
                     id: checkBoxCoulmn
                     spacing: 0
                     visible: showCheckBox
@@ -93,6 +106,15 @@ Rectangle {
                                 padding: 0
                                 Layout.alignment: Qt.AlignCenter
                                 enabled: !readOnly
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onEntered: _hoveredRowIndex = model.index
+                                    onExited: _hoveredRowIndex = -1
+                                    acceptedButtons: Qt.NoButton
+                                    cursorShape: Qt.PointingHandCursor
+                                }
 
                                 indicator: Rectangle {
                                     implicitHeight: 12
@@ -148,8 +170,6 @@ Rectangle {
                     id: splitView
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    implicitHeight: modelRowCount() * 30 // Sum of row heights
-                                    + 1 * (modelRowCount() - 1) // Sum of row separator heights
 
                     handle: Rectangle {
                         id: separator
@@ -202,7 +222,7 @@ Rectangle {
                                     spacing: 0
 
                                     Rectangle {
-                                        implicitHeight: index == 0 ? 0 : 1
+                                        height: index == 0 ? 0 : 1
                                         Layout.fillWidth: true
                                         color: theme.lineColor
                                     }
@@ -230,6 +250,15 @@ Rectangle {
 
                                         Component.onCompleted: {
                                             keyField.text = model.key
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            onEntered: _hoveredRowIndex = model.index
+                                            onExited: _hoveredRowIndex = -1
+                                            acceptedButtons: Qt.NoButton
+                                            cursorShape: Qt.IBeamCursor
                                         }
                                     }
                                 }
@@ -271,22 +300,112 @@ Rectangle {
                                         readOnly: rootRect.readOnly
                                         placeholderText: "Value"
                                         color: theme.textColor
+                                        onTextChanged: model.value = text
+                                        Component.onCompleted: valueField.text = model.value
 
                                         background: Rectangle {
                                             color: "transparent"
                                         }
 
-                                        onTextChanged: {
-                                            model.value = text
-                                        }
-
-                                        Component.onCompleted: {
-                                            valueField.text = model.value
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            onEntered: _hoveredRowIndex = model.index
+                                            onExited: _hoveredRowIndex = -1
+                                            acceptedButtons: Qt.NoButton
+                                            cursorShape: Qt.IBeamCursor
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            Rectangle {
+                id: deleteButtonColumn
+                visible: !readOnly
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.topMargin: 1
+                anchors.bottomMargin: 1
+                anchors.rightMargin: 12
+                width: 30
+                color: "transparent"
+
+                Component {
+                    id: deleteButton
+
+                    Rectangle {
+                        id: deleteButtonContent
+                        width: 30
+                        height: 30
+                        color: "transparent"
+                        visible: index !== modelRowCount() - 1
+
+                        Connections {
+                            target: rootRect
+                            function on_hoveredRowIndexChanged() {
+                                deleteButtonContent.visible = index !== modelRowCount() - 1
+                            }
+                        }
+
+                        property bool hovered: false
+
+                        Rectangle {
+                            id: deleteButtonBackground
+                            width: 20
+                            height: 20
+                            anchors.centerIn: parent
+                            color: parent.hovered ? theme.treeViewHighlight : "transparent"
+                            radius: 4
+                        }
+
+                        MouseArea {
+                            anchors.fill: deleteButtonBackground
+                            cursorShape: Qt.PointingHandCursor
+                            hoverEnabled: true
+                            onEntered: parent.hovered = true
+                            onExited: parent.hovered = false
+                            preventStealing: true
+                            onClicked: {
+                                if (model.isEnabled)
+                                    model.isEnabled = false
+
+                                rootRect.rowDeleted()
+                                rootRect.model.removeRows(index, 1)
+                            }
+                        }
+
+                        Canvas {
+                            id: xIcon
+                            width: 10
+                            height: 10
+                            anchors.centerIn: parent
+                            contextType: "2d"
+                            visible: _hoveredRowIndex === index || parent.hovered
+                            onPaint: {
+                                context.reset()
+                                context.strokeStyle = "#ffffff"
+                                context.moveTo(0, 0)
+                                context.lineTo(width, height)
+                                context.stroke()
+                                context.moveTo(0, height)
+                                context.lineTo(width, 0)
+                                context.stroke()
+                            }
+                        }
+                    }
+                }
+
+                ColumnLayout {
+                    spacing: 1
+
+                    Repeater {
+                        model: rootRect.model
+                        delegate: deleteButton
                     }
                 }
             }

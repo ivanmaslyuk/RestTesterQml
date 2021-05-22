@@ -21,6 +21,8 @@ Rectangle {
         }
     }
 
+    signal needMoreSpace(int addWidth)
+
     SplitView {
         id: control
         visible: app.requestSelected
@@ -38,8 +40,6 @@ Rectangle {
                 color: theme.lineColor
             }
         }
-
-        signal needMoreSpace(int addWidth)
 
         SplitView {
             id: requestPane
@@ -83,7 +83,7 @@ Rectangle {
             target: documentationPane
             function onVisibleChanged() {
                 if (documentationPane.visible && control.width < 700) {
-                    control.needMoreSpace(300)
+                    needMoreSpace(300)
                 }
                 documentationPane.SplitView.preferredWidth = 300
             }

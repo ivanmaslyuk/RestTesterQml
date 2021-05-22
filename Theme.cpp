@@ -144,3 +144,4 @@ void Theme::setToolButtonFg(QString value)
     m_toolButtonFg = value;
     emit toolButtonFgChanged(value);
 }
+

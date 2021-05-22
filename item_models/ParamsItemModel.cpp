@@ -47,6 +47,21 @@ int ParamsItemModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
+bool ParamsItemModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    Q_UNUSED(parent)
+    Q_UNUSED(count)
+
+    if (row < 0 || row >= m_params->count())
+        return false;
+
+    beginRemoveRows(parent, row, row);
+    m_params->removeAt(row);
+    endRemoveRows();
+
+    return true;
+}
+
 QVariant ParamsItemModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
