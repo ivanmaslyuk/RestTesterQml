@@ -177,7 +177,7 @@ ColumnLayout  {
         SwitchTabBar {
             id: tabBar
             Layout.leftMargin: 16
-            tabsModel: [qsTr("Запрос"), qsTr("Тело"), qsTr("Заголовки"), qsTr("Тесты"), qsTr("Документация")]
+            tabsModel: [qsTr("Запрос"), qsTr("Тело"), qsTr("Заголовки"), qsTr("Тесты")]
         }
 
         StyledComboBox {
@@ -340,40 +340,5 @@ ColumnLayout  {
 
             ScrollBar.vertical: ScrollBar { }
         }
-
-        Flickable {
-            boundsBehavior: Flickable.StopAtBounds
-            clip: true
-
-            TextArea.flickable: TextArea {
-//                background: Rectangle {color: "red"}
-                id: documentationShow
-                leftPadding: 2
-                rightPadding: 2
-                topPadding: 0
-                bottomPadding: 0
-                wrapMode: TextArea.Wrap
-                selectByMouse: true
-                placeholderText: qsTr("Нет документации")
-                color: theme.textColor
-                font.pixelSize: 12
-                readOnly: true
-                textFormat: TextArea.MarkdownText
-                onLinkActivated: Qt.openUrlExternally(link)
-                onLinkHovered: { }
-
-                Connections {
-                    target: app
-                    function onActiveRequestChanged(request) {
-                        documentationShow.text = request.documentation
-                        documentationShow.update()
-                    }
-                }
-            }
-
-            ScrollBar.vertical: ScrollBar {}
-        }
-
     }
-
 }
