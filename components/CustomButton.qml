@@ -3,57 +3,87 @@ import QtQuick.Controls 2.15
 
 Button {
     id: control
-    property string hoverColor: getHoverColor()
-    property string color: getColor()
-    property string textColor: getTextColor()
     property string emphasis: "high"
-    property string _currentColor: color
+    property string color: theme.accentColor
+    property bool secondary: false
 
-    function getColor() {
-        if (emphasis === "high")
-            return "#3D5AFE"
-        else if (emphasis === "medium")
-            return "#EEEEEE"
-    }
+    states: [
 
-    function getHoverColor() {
-        if (emphasis === "high")
-            return "#304FFE"
-        else if (emphasis === "medium")
-            return "#DDDDDD"
-    }
+        State {
+            name: "disabled"
+            when: !control.enabled
+            PropertyChanges {
+                target: buttonBorderBox
+                border.width: 0
+            }
+            PropertyChanges {
+                target: buttonBackground
+                opacity: 0.3
+            }
+        },
+        State {
+            name: "regular-secondary"
+            when: !hovered && secondary
+            PropertyChanges {
+                target: buttonBackground
+                opacity: 0
+            }
+        },
+        State {
+            name: "regular-primary"
+            when: !hovered && !secondary
+            PropertyChanges {
+                target: buttonBackground
+                opacity: 0.3
+            }
+        },
+        State {
+            name: "hovered"
+            when: hovered && !pressed
+            PropertyChanges {
+                target: buttonBackground
+                opacity: 0.4
+            }
+        },
+        State {
+            name: "pressed"
+            when: pressed
+            PropertyChanges {
+                target: buttonBackground
+                opacity: 0.5
+            }
+        }
+    ]
 
-    function getTextColor() {
-        if (!control.enabled)
-            return "black"
-
-        if (emphasis === "high")
-            return "white"
-        else if (emphasis === "medium")
-            return "#555555"
+    transitions: Transition {
+        NumberAnimation {
+            duration: 100
+        }
     }
 
     contentItem: Text {
-        font.pixelSize: 16
-        font.bold: true
+        id: buttonText
+        font: parent.font
         text: control.text
-        color: getTextColor()
+        color: "white"
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
 
     background: Rectangle {
-        color: control._currentColor
+        id: buttonBorderBox
         radius: 4
-    }
+        border.width: control.secondary ? 0 : 1
+        border.color: control.color
+        color: "transparent"
 
-    onHoveredChanged: {
-        _currentColor = control.hovered ? control.hoverColor : control.color
-    }
-
-    Behavior on _currentColor {
-        ColorAnimation { duration: 100; loops: 1 }
+        Rectangle {
+            id: buttonBackground
+            anchors.fill: parent
+            radius: 4
+            color: control.color
+        }
     }
 
     MouseArea {

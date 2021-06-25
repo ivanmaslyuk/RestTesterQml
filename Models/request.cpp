@@ -28,6 +28,35 @@ Request::Request(QString uuid, QObject *parent) : Request(parent)
     m_uuid = uuid;
 }
 
+Request *Request::fromSqlQuery(QSqlQuery query)
+{
+    QString queryParamsJson = query.value("query_params_json").toString();
+    QList<ParamModel *> queryParams = ParamModel::listFromJson(queryParamsJson);
+
+    QString dataParamsJson = query.value("data_params_json").toString();
+    QList<ParamModel *> dataParams = ParamModel::listFromJson(dataParamsJson);
+
+    QString headersJson = query.value("headers_json").toString();
+    QList<ParamModel *> headers = ParamModel::listFromJson(headersJson);
+
+    Request *request = new Request;
+    request->setLocalId(query.value("id").toInt());
+    request->setUuid(query.value("uuid").toString());
+    request->setUrl(query.value("url").toString());
+    request->setQueryParams(queryParams);
+    request->setDataParams(dataParams);
+    request->setHeaders(headers);
+    request->setRawData(query.value("raw_data").toString());
+    request->setMethod(query.value("method").toString());
+    request->setName(query.value("name").toString());
+    request->setContentType(query.value("content_type").toString());
+    request->setDocumentation(query.value("documentation").toString());
+    request->setTests(query.value("tests").toString());
+    request->setEdited(false);
+
+    return request;
+}
+
 QByteArray Request::data()
 {
     if (m_contentType == "application/x-www-form-urlencoded") {

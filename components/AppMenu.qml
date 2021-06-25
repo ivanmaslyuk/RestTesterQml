@@ -51,7 +51,12 @@ Rectangle {
         CustomButton {
             id: syncButton
             text: "Синхронизация"
+            implicitHeight: 26
+            font.pixelSize: 12
+            color: theme.toolButtonBg
+
             onClicked: {
+                syncButton.enabled = false
                 if (app.hasUnsavedRequests()) {
                     syncUnsavedRequestsDialog.open()
                 } else {

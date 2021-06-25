@@ -6,6 +6,7 @@ import QtQml.Models 2.15
 import "."
 
 Rectangle {
+    id: rootRect
     color: theme.primaryBackground
 
     Rectangle {
@@ -71,6 +72,8 @@ Rectangle {
                 SplitView.minimumHeight: 40
                 SplitView.fillHeight: true
             }
+
+            Component.onCompleted: requestInfoView.height = rootRect.height / 2
         }
 
         DocumentationView {

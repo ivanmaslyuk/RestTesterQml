@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QList>
 #include <QJsonObject>
+#include <QSqlQuery>
+
 #include "parammodel.h"
 #include "item_models/ParamsItemModel.h"
 
@@ -30,6 +32,7 @@ public:
     explicit Request(QString uuid, QObject *parent = nullptr);
 
     static Request *empty(QObject *parent = nullptr);
+    static Request *fromSqlQuery(QSqlQuery query);
 
     QByteArray data();
 

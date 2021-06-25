@@ -107,7 +107,7 @@ Rectangle {
                     NumberAnimation on y {
                         from: 100
                         to: 0
-                        duration: 100
+                        duration: 200
                         easing.type: Easing.InOutBack
 
                     }

@@ -1,5 +1,10 @@
 #include "requesttreenode.h"
 
+#include <QSqlDatabase>
+#include <QSqlQuery>
+
+#include "Error.h"
+
 RequestTreeNode::RequestTreeNode(QObject *parent)
     : QObject(parent)
 {
@@ -21,6 +26,46 @@ RequestTreeNode::RequestTreeNode(QString uuid, QObject *parent)
     : RequestTreeNode(parent)
 {
     m_uuid = uuid;
+}
+
+RequestTreeNode *RequestTreeNode::getById(int id, QString connectionName)
+{
+    QSqlDatabase db = QSqlDatabase::database(connectionName);
+
+    QSqlQuery nodeQuery("SELECT * FROM node n JOIN node p ON n.parent_id = p.id WHERE deleted = false LIMIT 1;", db);
+    if (!nodeQuery.next())
+        throw Error(QString("Node with id %1 was not found in the DB.").arg(id));
+
+    RequestTreeNode *node = RequestTreeNode::fromSqlQuery(nodeQuery);
+
+    if (!node->isFolder()) {
+        QSqlQuery requestQuery("SELECT * FROM request r JOIN node n ON n.id = r.node_id WHERE n.deleted = false;", db);
+        if (!requestQuery.next())
+            throw Error(QString("Request for node with id %1 was not found.").arg(id));
+
+        Request *request = Request::fromSqlQuery(requestQuery);
+        request->setParent(node);
+
+        node->setRequest(request);
+    }
+
+    return node;
+}
+
+RequestTreeNode *RequestTreeNode::fromSqlQuery(QSqlQuery query)
+{
+    RequestTreeNode *node = new RequestTreeNode();
+    int localId = query.value("id").toInt();
+    node->setLocalId(localId);
+    node->setParentUuid(query.value("p.uuid").toString());
+    node->setUuid(query.value("uuid").toString());
+    node->setIsFolder(query.value("is_folder").toBool());
+    node->setFolderName(query.value("folder_name").toString());
+    node->setDeleted(query.value("deleted").toBool());
+    node->setEditedAt(QDateTime::fromString(query.value("edited_at").toString(), Qt::ISODateWithMs));
+    node->setPointer(query.value("pointer").toInt());
+
+    return node;
 }
 
 int RequestTreeNode::localId() const

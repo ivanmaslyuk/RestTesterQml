@@ -15,90 +15,101 @@ Dialog {
         invalidCredentials = false
     }
 
-    contentItem: ColumnLayout {
-        spacing: 12
-        anchors.fill: parent
+    contentItem: Rectangle {
+        color: theme.primaryBackground
 
-        Text {
-            text: qsTr("Авторизация")
-            font.pixelSize: 16
-            Layout.topMargin: 12
-            Layout.leftMargin: 16
-        }
-
-        TextField {
-            id: urlField
-            placeholderText: qsTr("Адрес сервера")
-            text: 'http://localhost:8000'
-            implicitHeight: 40
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-            Layout.fillWidth: true
-            selectByMouse: true
-
-            background: Rectangle {
-                anchors.fill: parent
-                border.color: control.invalidCredentials ? "red" : "#EEEEEE"
-                radius: 4
-            }
-        }
-
-        TextField {
-            id: usernameField
-            placeholderText: qsTr("Имя пользователя")
-            implicitHeight: 40
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-            Layout.fillWidth: true
-            selectByMouse: true
-
-            background: Rectangle {
-                anchors.fill: parent
-                border.color: control.invalidCredentials ? "red" : "#EEEEEE"
-                radius: 4
-            }
-        }
-
-        TextField {
-            id: passwordField
-            placeholderText: qsTr("Пароль")
-            implicitHeight: 40
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-            Layout.fillWidth: true
-            selectByMouse: true
-            echoMode: TextInput.Password
-
-            background: Rectangle {
-                anchors.fill: parent
-                border.color: control.invalidCredentials ? "red" : "#EEEEEE"
-                radius: 4
-            }
-        }
-
-        Rectangle { Layout.fillHeight: true }
-
-        RowLayout {
+        ColumnLayout {
             spacing: 12
-            Layout.alignment: Qt.AlignRight
-            Layout.rightMargin: 16
-            Layout.bottomMargin: 12
-            Layout.leftMargin: 16
+            anchors.fill: parent
 
-            Spinner {
-                id: spinner
-                visible: false
-                width: 20
+            Text {
+                text: qsTr("Авторизация")
+                font.pixelSize: 16
+                Layout.topMargin: 12
+                Layout.leftMargin: 16
+                color: theme.textColor
             }
 
-            Rectangle { Layout.fillWidth: true }
+            TextField {
+                id: urlField
+                placeholderText: qsTr("Адрес сервера")
+                text: 'http://localhost:8000'
+                implicitHeight: 40
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
+                Layout.fillWidth: true
+                selectByMouse: true
+                color: theme.textColor
 
-            CustomButton {
-                text: "Войти"
-                onClicked: {
-                    spinner.visible = true
-                    app.authenticator.logIn(urlField.text, usernameField.text,
-                                            passwordField.text)
+                background: Rectangle {
+                    anchors.fill: parent
+                    border.color: control.invalidCredentials ? "red" : theme.lineColor
+                    radius: 4
+                    color: "transparent"
+                }
+            }
+
+            TextField {
+                id: usernameField
+                placeholderText: qsTr("Имя пользователя")
+                implicitHeight: 40
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
+                Layout.fillWidth: true
+                selectByMouse: true
+                color: theme.textColor
+
+                background: Rectangle {
+                    anchors.fill: parent
+                    border.color: control.invalidCredentials ? "red" : theme.lineColor
+                    radius: 4
+                    color: "transparent"
+                }
+            }
+
+            TextField {
+                id: passwordField
+                placeholderText: qsTr("Пароль")
+                implicitHeight: 40
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
+                Layout.fillWidth: true
+                selectByMouse: true
+                echoMode: TextInput.Password
+                color: theme.textColor
+
+                background: Rectangle {
+                    anchors.fill: parent
+                    border.color: control.invalidCredentials ? "red" : theme.lineColor
+                    radius: 4
+                    color: "transparent"
+                }
+            }
+
+            Rectangle { Layout.fillHeight: true }
+
+            RowLayout {
+                spacing: 12
+                Layout.alignment: Qt.AlignRight
+                Layout.rightMargin: 16
+                Layout.bottomMargin: 12
+                Layout.leftMargin: 16
+
+                Spinner {
+                    id: spinner
+                    visible: false
+                    width: 20
+                }
+
+                Rectangle { Layout.fillWidth: true }
+
+                CustomButton {
+                    text: "Войти"
+                    onClicked: {
+                        spinner.visible = true
+                        app.authenticator.logIn(urlField.text, usernameField.text,
+                                                passwordField.text)
+                    }
                 }
             }
         }

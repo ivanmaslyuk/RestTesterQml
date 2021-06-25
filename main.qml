@@ -10,8 +10,8 @@ Window {
     id: window
     width: 750
     height: 600
-    minimumHeight: 500
-    minimumWidth: 520
+    minimumHeight: 600
+    minimumWidth: 600
     visible: true
     title: "REST Tester"
 
