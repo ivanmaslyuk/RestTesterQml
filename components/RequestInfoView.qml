@@ -28,10 +28,14 @@ ColumnLayout  {
     }
 
     Rectangle {
-        id: header
+        Layout.leftMargin: 16
+        Layout.rightMargin: 16
+        Layout.topMargin: 12
         Layout.fillWidth: true
-        color: theme.secondaryBackground
         height: 40
+        radius: 4
+        color: theme.secondaryBackground
+
 
         RowLayout {
             anchors.fill: parent

@@ -55,7 +55,8 @@ Rectangle {
 
                 Rectangle {
                     height: 1
-                    color: theme.lineColor
+//                    color: theme.lineColor
+                    color: "transparent"
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom

@@ -15,6 +15,9 @@ ColumnLayout {
         id: header
         implicitHeight: 40
         Layout.fillWidth: true
+        Layout.leftMargin: 16
+        Layout.rightMargin: 16
+        radius: 4
         color: theme.secondaryBackground
 
         RowLayout {
@@ -64,6 +67,9 @@ ColumnLayout {
     StackLayout {
         id: stackLayout
         currentIndex: tabBar.currentIndex
+        Layout.leftMargin: 16
+        Layout.rightMargin: 16
+        Layout.topMargin: 12
 
         ScrollView {
             id: scrollView
@@ -76,8 +82,10 @@ ColumnLayout {
                 font.pixelSize: 12
                 selectByMouse: true
                 color: theme.textColor
+                width: stackLayout.width
                 readOnly: true
-                textMargin: 4
+                textMargin: 0
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
         }
 
@@ -93,10 +101,10 @@ ColumnLayout {
                 model: response ? response.headersModel : null
 
                 anchors.fill: parent
-                anchors.topMargin: 12
-                anchors.bottomMargin: 12
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
+//                anchors.topMargin: 12
+//                anchors.bottomMargin: 12
+//                anchors.leftMargin: 16
+//                anchors.rightMargin: 16
             }
         }
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QFile>
+#include <QVariant>
 
 class JsonStorage : public QObject
 {
