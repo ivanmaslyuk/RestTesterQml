@@ -2,6 +2,7 @@
 #define PARAMMODEL_H
 
 #include <QString>
+#include <QList>
 
 struct ParamModel
 {
