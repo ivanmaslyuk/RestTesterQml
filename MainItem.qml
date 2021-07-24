@@ -70,7 +70,7 @@ Rectangle {
             CustomTreeView {
                 id: treeView
                 clip: true
-                visible: menu.showTree
+                visible: app.showRequestList
                 SplitView.minimumWidth: 100
                 SplitView.maximumWidth: control.width / 3
             }

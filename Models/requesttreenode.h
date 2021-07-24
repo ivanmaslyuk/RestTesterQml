@@ -17,7 +17,13 @@ public:
     explicit RequestTreeNode(QString uuid, QObject *parent = nullptr);
 
     static RequestTreeNode *getById(int id, QString connectionName = "qt_sql_default_connection");
+    static QList<RequestTreeNode *> getAll(QString connectionName);
     static RequestTreeNode *fromSqlQuery(QSqlQuery query);
+
+    void save(QString connectionName);
+
+    void setEditedAtToNow();
+    void incrementPointer();
 
     int localId() const;
     void setLocalId(int id);

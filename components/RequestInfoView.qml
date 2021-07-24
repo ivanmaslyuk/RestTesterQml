@@ -27,44 +27,50 @@ ColumnLayout  {
         paramsVisible = true
     }
 
-    RowLayout {
-        Layout.leftMargin: 16
-        Layout.rightMargin: 16
-        Layout.topMargin: 12
+    Rectangle {
+        id: header
         Layout.fillWidth: true
+        color: theme.secondaryBackground
+        height: 40
 
-        Text {
-            id: requestName
-            color: theme.textColor
-            text: request.name
-            font.pixelSize: 16
-        }
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 16
+            anchors.rightMargin: 16
 
-        Rectangle {
-            height: 6
-            width: 6
-            color: theme.accentColor
-            radius: 3
-            visible: request.edited
-        }
+            Text {
+                id: requestName
+                color: theme.textColor
+                text: request.name
+                font.pixelSize: 16
+            }
 
-        Rectangle { Layout.fillWidth: true }
+            Rectangle {
+                height: 6
+                width: 6
+                color: theme.accentColor
+                radius: 3
+                visible: request.edited
+            }
 
-        LinkButton {
-            visible: request.edited
-            text: qsTr("Сохранить")
-            color: theme.textColor
-            onClicked: app.saveCurrentRequest()
-        }
+            Rectangle { Layout.fillWidth: true }
 
-        LinkButton {
-            text: documentationShown ? qsTr("Скрыть документацию")
-                                     : qsTr("Документация")
-            Layout.alignment: Qt.AlignVCenter
-            color: theme.textColor
+            LinkButton {
+                visible: request.edited
+                text: qsTr("Сохранить")
+                color: theme.textColor
+                onClicked: app.saveCurrentRequest()
+            }
 
-            onPressed: {
-                documentationShown = !documentationShown
+            LinkButton {
+                text: documentationShown ? qsTr("Скрыть документацию")
+                                         : qsTr("Документация")
+                Layout.alignment: Qt.AlignVCenter
+                color: theme.textColor
+
+                onPressed: {
+                    documentationShown = !documentationShown
+                }
             }
         }
     }

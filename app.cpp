@@ -6,6 +6,7 @@
 App::App(QObject *parent) : QObject(parent)
 {
     m_requestSelected = false;
+    m_showRequestList = true;
     m_settings = new JsonStorage("settings.json", this);
 
     m_activeRequest = new Request(this);
@@ -202,6 +203,20 @@ void App::deleteNode(QModelIndex index)
     }
 
     m_requestTreeModel->removeRow(index.row(), index.parent());
+}
+
+bool App::showRequestList() const
+{
+    return m_showRequestList;
+}
+
+void App::setShowRequestList(bool showRequestList)
+{
+    if (m_showRequestList == showRequestList)
+        return;
+
+    m_showRequestList = showRequestList;
+    emit showRequestListChanged(m_showRequestList);
 }
 
 void App::requestTreeItemActivated(QModelIndex index)

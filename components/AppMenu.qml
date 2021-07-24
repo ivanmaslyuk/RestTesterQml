@@ -10,8 +10,6 @@ Rectangle {
                    + rootLayout.anchors.leftMargin + rootLayout.anchors.rightMargin
     color: "transparent"
 
-    property bool showTree: true
-
     LoginDialog {
         id: loginDialog
         visible: false
@@ -25,14 +23,14 @@ Rectangle {
         anchors.rightMargin: 16
 
         RadioToolButton {
-            id: showTreeButton
+            id: showRequestListButton
             text: qsTr("Список")
-            on: showTree
+            on: app.showRequestList
 
             Binding {
-                target: control
-                property: "showTree"
-                value: showTreeButton.on
+                target: app
+                property: "showRequestList"
+                value: showRequestListButton.on
             }
         }
 

@@ -1,6 +1,7 @@
 #include "request.h"
 #include <QUrl>
 #include "Error.h"
+#include "db/SQLErrorHandler.h"
 
 Request::Request(QObject *parent) : QObject(parent)
 {
@@ -55,6 +56,34 @@ Request *Request::fromSqlQuery(QSqlQuery query)
     request->setEdited(false);
 
     return request;
+}
+
+void Request::save(QString connectionName)
+{
+    if (m_localId == -1)
+        throw Error("Cannot save Request that hasn't been created first.");
+
+    QSqlDatabase db = QSqlDatabase::database(connectionName);
+
+    QSqlQuery query(db);
+    query.prepare("UPDATE request SET url = :url, query_params_json = :query_params_json, "
+                  "data_params_json = :data_params_json, headers_json = :headers_json, raw_data = :raw_data,"
+                  "method = :method, name = :name, content_type = :content_type, documentation = :documentation,"
+                  "tests = :tests WHERE id = :local_id;");
+    query.bindValue(":url", m_url);
+    query.bindValue(":query_params_json", ParamModel::listToJson(m_queryParams));
+    query.bindValue(":data_params_json", ParamModel::listToJson(m_dataParams));
+    query.bindValue(":headers_json", ParamModel::listToJson(m_headers));
+    query.bindValue(":raw_data", m_rawData);
+    query.bindValue(":method", m_method);
+    query.bindValue(":name", m_name);
+    query.bindValue(":content_type", m_contentType);
+    query.bindValue(":documentation", m_documentation);
+    query.bindValue(":tests", m_tests);
+    query.bindValue("local_id", m_localId);
+
+    query.exec();
+    SQLErrorHandler::handleErrors(query);
 }
 
 QByteArray Request::data()

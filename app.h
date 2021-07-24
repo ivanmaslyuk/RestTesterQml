@@ -22,6 +22,7 @@ class App : public QObject
     Q_PROPERTY(JsonStorage *settings READ settings CONSTANT)
     Q_PROPERTY(ServerSyncService *serverSyncService READ serverSyncService CONSTANT)
     Q_PROPERTY(bool requestSelected READ requestSelected NOTIFY requestSelectedChanged)
+    Q_PROPERTY(bool showRequestList READ showRequestList WRITE setShowRequestList NOTIFY showRequestListChanged)
 
 public:
     explicit App(QObject *parent = nullptr);
@@ -47,6 +48,9 @@ public:
     Q_INVOKABLE void renameNode(QString newName, QModelIndex index);
     Q_INVOKABLE void deleteNode(QModelIndex index);
 
+    bool showRequestList() const;
+    void setShowRequestList(bool showRequestList);
+
 private:
     bool m_requestSelected;
     ServerSyncService *m_serverSyncService;
@@ -58,10 +62,13 @@ private:
     SQLiteStorage *m_storage;
     JsonStorage *m_settings;
 
+    bool m_showRequestList;
+
 signals:
     void activeRequestChanged(Request *request);
     void requestTreeModelChanged(TreeModel *treeModel);
     void requestSelectedChanged(bool requestSelected);
+    void showRequestListChanged(bool showRequestList);
 
 public slots:
     Q_INVOKABLE void requestTreeItemActivated(QModelIndex index);

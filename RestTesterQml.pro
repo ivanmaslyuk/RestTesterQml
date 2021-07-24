@@ -18,6 +18,7 @@ SOURCES += \
         Theme.cpp \
         app.cpp \
         db/JsonStorage.cpp \
+        db/SQLErrorHandler.cpp \
         db/SQLiteStorage.cpp \
         item_models/ParamsItemModel.cpp \
         main.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     Theme.h \
     app.h \
     db/JsonStorage.h \
+    db/SQLErrorHandler.h \
     db/SQLiteStorage.h \
     item_models/ParamsItemModel.h \
     server_api/Authenticator.h \

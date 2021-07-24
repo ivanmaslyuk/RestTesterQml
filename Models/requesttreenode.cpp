@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 
 #include "Error.h"
+#include "db/SQLErrorHandler.h"
 
 RequestTreeNode::RequestTreeNode(QObject *parent)
     : QObject(parent)
@@ -52,6 +53,17 @@ RequestTreeNode *RequestTreeNode::getById(int id, QString connectionName)
     return node;
 }
 
+QList<RequestTreeNode *> RequestTreeNode::getAll(QString connectionName)
+{
+    QSqlDatabase db = QSqlDatabase::database(connectionName);
+
+    QSqlQuery query("SELECT * FROM node n JOIN node p ON n.parent_id = p.id WHERE deleted = false");
+
+    while (query.next()) {
+
+    }
+}
+
 RequestTreeNode *RequestTreeNode::fromSqlQuery(QSqlQuery query)
 {
     RequestTreeNode *node = new RequestTreeNode();
@@ -66,6 +78,39 @@ RequestTreeNode *RequestTreeNode::fromSqlQuery(QSqlQuery query)
     node->setPointer(query.value("pointer").toInt());
 
     return node;
+}
+
+void RequestTreeNode::save(QString connectionName)
+{
+    if (m_localId == -1)
+        throw Error("Cannot save Node that hasn't been created first.");
+
+    QSqlDatabase db = QSqlDatabase::database(connectionName);
+
+    QSqlQuery query(db);
+    query.prepare("UPDATE node SET folder_name = :folder_name, deleted = :deleted, edited_at = :edited_at,"
+                  "pointer = :pointer WHERE id = :local_id;");
+    query.bindValue(":folder_name", m_folderName);
+    query.bindValue(":deleted", m_deleted);
+    query.bindValue(":edited_at", m_editedAt.toString(Qt::ISODateWithMs));
+    query.bindValue(":pointer", m_pointer);
+    query.bindValue(":local_id", m_localId);
+    query.exec();
+
+    SQLErrorHandler::handleErrors(query);
+
+    if (!m_isFolder)
+        m_request->save(connectionName);
+}
+
+void RequestTreeNode::setEditedAtToNow()
+{
+    m_editedAt = QDateTime::currentDateTime();
+}
+
+void RequestTreeNode::incrementPointer()
+{
+    m_pointer += 1;
 }
 
 int RequestTreeNode::localId() const

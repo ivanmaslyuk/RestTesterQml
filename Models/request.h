@@ -34,6 +34,8 @@ public:
     static Request *empty(QObject *parent = nullptr);
     static Request *fromSqlQuery(QSqlQuery query);
 
+    void save(QString connectionName);
+
     QByteArray data();
 
     QString uuid();
